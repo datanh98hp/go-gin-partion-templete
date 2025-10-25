@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:17.5-alpine3.22
+    container_name: db
+    restart: unless-stopped  # tự reset nếu gặp lỗi, trừ khi bị dừng thủ công
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "shop@123"
+      POSTGRES_DB: "shopping-cart"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data:
