@@ -45,16 +45,15 @@ func InitializeDatabase() error {
 	context, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	DBPool, err := pgxpool.NewWithConfig(context, conf)
+	DBpool, err = pgxpool.NewWithConfig(context, conf)
 	if err != nil {
-		return fmt.Errorf("Unable to connect to database: %v", err)
+		return fmt.Errorf("error creating DB pool: %v", err)
 	}
-
 	// Create a new Queries instance using the established connection pool
-	DB = sqlc.New(DBPool) // Assuming sqlc package is imported correctly
+	DB = sqlc.New(DBpool) // Assuming sqlc package is imported correctly
 
 	// Ping the database to ensure the connection is established
-	if err := DBPool.Ping(context); err != nil {
+	if err := DBpool.Ping(context); err != nil {
 		return fmt.Errorf("Unable to ping database: %v", err)
 	}
 

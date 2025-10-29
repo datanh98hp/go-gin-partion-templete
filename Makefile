@@ -1,16 +1,16 @@
 include .env
 export
 
-MIRGRATION_DIR = ./internal/db/migrations
+MIRGRATION_DIR = internal/db/migrations
 # MIRGRATION_DIR = .//nternal//db//migrations
 CONN_STRING = postgresql://${DB_USER}:${DB_PASS}@$(DB_HOST):$(DB_PORT)/${DB_NAME}?sslmode=${DB_SSLMODE}
 
 ENV_FILE=.env
 # Import and export databases
 importdb:
-	docker exec -i db psql -U root -d postgres_db < ./backup_data-db.sql
+	docker exec -i db psql -U root -d ${DB_NAME} < ./backup_data-db.sql
 exportdb:
-	docker exec -i db pg_dump -U root -d postgres_db > ./backup_data-db.sql
+	docker exec -i db pg_dump -U root -d ${DB_NAME} > ./backup_data-db.sql
 start_container:
 	docker compose up -d
 remove_container:

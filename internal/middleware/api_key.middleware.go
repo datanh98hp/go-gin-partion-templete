@@ -9,28 +9,25 @@ import (
 )
 
 func ApiKeyMiddleware() gin.HandlerFunc {
-	expectedAPIKey := os.Getenv("API_KEY")
-	if expectedAPIKey == "" {
-		expectedAPIKey = "default"
-
+	expectedKey := os.Getenv("API_KEY")
+	if expectedKey == "" {
+		expectedKey = "secret-key"
 	}
-	return func(c *gin.Context) {
-		//get api key
-		apiKeyHeader := c.GetHeader("X-API-KEY")
-		log.Println("API_KEY Header:", apiKeyHeader)
 
-		if apiKeyHeader == "" {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "API key not provided"})
-			return
-		}
-		if apiKeyHeader != expectedAPIKey {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid API key"})
+	return func(ctx *gin.Context) {
+		apiKey := ctx.GetHeader("X-API-Key")
+		log.Printf("---X-API-Key : %s", apiKey)
+		if apiKey == "" {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Missing X-API-Key"})
 			return
 		}
 
-		//
-		c.Next()
+		if apiKey != expectedKey {
+			log.Println("Invalid API Key")
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid API Key"})
+			return
+		}
 
+		ctx.Next()
 	}
-
 }

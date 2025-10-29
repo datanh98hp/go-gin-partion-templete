@@ -8,11 +8,34 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: "root"
-      POSTGRES_PASSWORD: "shop@123"
-      POSTGRES_DB: "shopping-cart"
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - pg_data:/var/lib/postgresql/data
-
+    networks:
+      - app-network
+  
+  redis:
+    image: redis:8.0-alpine
+    container_name: redis
+    restart: unless-stopped  # tự reset nếu gặp lỗi, trừ khi bị dừng thủ công
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_DB: ${REDIS_DB}
+      REDIS_USER: ${REDIS_USER}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+      - ./systems/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf  # run redis 
+    networks:
+      - app-network
 volumes:
   pg_data:
+  redis-data:
+
+networks:
+  app-network:
+    driver: bridge

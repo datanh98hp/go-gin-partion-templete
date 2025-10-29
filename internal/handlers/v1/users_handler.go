@@ -36,7 +36,8 @@ func (uh *UsersHandler) GetUsers(ctx *gin.Context) {
 		return
 	}
 	log.Printf("query: %+v", query)
-	users, total, err := uh.services.GetUsers(ctx, &query.Search, query.Order, query.Sort, query.Page, query.Limit)
+	//users, total, err := uh.services.GetUsers(ctx, &query.Search, query.Order, query.Sort, query.Page, query.Limit, query.Deleted)
+	users, total, err := uh.services.GetUsers(ctx, &query.Search, query.Order, query.Sort, query.Page, query.Limit, false)
 	if err != nil {
 		utils.ResponseError(ctx, err)
 		return
@@ -68,7 +69,26 @@ func (uh *UsersHandler) GetUserByUUID(ctx *gin.Context) {
 	dto := dto_v1.MapUserToDto(usr)
 	utils.ResponseSuccess(ctx, http.StatusOK, "User retrieved successfully", dto)
 }
+func (uh *UsersHandler) GetUsersDeleted(ctx *gin.Context) {
 
+	var query dto_v1.GetUsersByQuery
+	if err := ctx.ShouldBindQuery(&query); err != nil {
+		utils.ResponseValidator(ctx, validations.HandleValidationErr(err))
+		return
+	}
+	log.Printf("query: %+v", query)
+
+	users, total, err := uh.services.GetUsers(ctx, &query.Search, query.Order, query.Sort, query.Page, query.Limit, true)
+	if err != nil {
+		utils.ResponseError(ctx, err)
+		return
+	}
+
+	////
+	dtos := dto_v1.MapUsersToDto(users) // convert model to list dto for response
+	paginationResponse := utils.NewPaginationResponse(dtos, query.Page, query.Limit, total)
+	utils.ResponseSuccess(ctx, http.StatusOK, "Users soft deleted successfully", paginationResponse)
+}
 func (uh *UsersHandler) AddUser(ctx *gin.Context) {
 	var input dto_v1.CreateUsersInput
 	if err := ctx.ShouldBindJSON(&input); err != nil {

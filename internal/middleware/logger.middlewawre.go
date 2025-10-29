@@ -92,7 +92,7 @@ func LoggerMiddleware(httpLogger *zerolog.Logger) gin.HandlerFunc {
 					}
 
 				}
-				log.Printf("=========%s", requestBody)
+				//log.Printf("=========%s", requestBody)
 			}
 		}
 		/// Response Writer

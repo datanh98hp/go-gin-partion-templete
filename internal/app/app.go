@@ -16,13 +16,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/redis/go-redis/v9"
 )
 
 type Module interface {
 	Route() routes.Route
 }
 type ModulesContext struct {
-	DB sqlc.Querier
+	DB    sqlc.Querier
+	Redis *redis.Client
 }
 type Application struct {
 	Config  *config.Config
@@ -38,11 +40,17 @@ func NewApplication(cfg *config.Config) *Application {
 
 	//Load .env file
 	loadEnv()
+	//postgres
 	if err := db.InitializeDatabase(); err != nil { //db.InitializeDatabase()
 		log.Fatalf("Error initializing database: %v", err)
 	}
+	//Redis
+
+	redisClient := config.NewRedisClient()
+
 	ctx := ModulesContext{
-		DB: db.DB,
+		DB:    db.DB,
+		Redis: redisClient,
 	}
 	//Call validator
 	if err := validations.InitValidator(); err != nil {

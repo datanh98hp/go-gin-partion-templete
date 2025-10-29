@@ -3,7 +3,7 @@ INSERT INTO users (user_email, user_fullname, user_password, user_age, user_stat
 VALUES ($1, $2, $3, $4, $5, $6) RETURNING * ;
 
 -- name: GetUserByUUID :one
-SELECT * FROM users WHERE user_uuid = $1;
+SELECT * FROM users WHERE user_uuid = $1 AND user_deleted_at IS NULL;
 
 -- name: UpdateUserByUUID :one
 UPDATE users 
@@ -14,6 +14,9 @@ user_age = COALESCE(sqlc.narg(user_age), user_age),
 user_status =COALESCE(sqlc.narg(user_status), user_status),
 user_level = COALESCE(sqlc.narg(user_level), user_level)
 WHERE user_uuid = sqlc.arg(user_uuid)::uuid AND user_deleted_at IS NULL RETURNING *;
+
+-- name: GetUsersDeleted :many
+SELECT * FROM users WHERE user_deleted_at IS NOT NULL;
 
 -- name: SoftDeleteUserByUUID :one
 UPDATE users 
@@ -91,7 +94,11 @@ LIMIT $1 OFFSET $2
 -- name: CountUsers :one
 SELECT COUNT(*)
 FROM users 
-WHERE user_deleted_at IS NULL 
+WHERE (
+    sqlc.narg(deleted)::bool IS NULL 
+    OR  (sqlc.narg(deleted)::bool = TRUE AND user_deleted_at IS NOT NULL )
+    OR  (sqlc.narg(deleted)::bool = FALSE AND user_deleted_at IS NULL )
+)
 AND (
     sqlc.narg(search)::TEXT IS NULL OR
     sqlc.narg(search)::TEXT = '' OR

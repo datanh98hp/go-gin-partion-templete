@@ -37,17 +37,8 @@ func getRateLimiter(ip string) *rate.Limiter {
 	client, exist := clients[ip]
 	if !exist {
 		// get env variable for rate limiter
-		requestSecStr := utils.GetEnv("RATE_LIMITER_REQUEST_SEC", "5")
-		brustStr := utils.GetEnv("RATE_LIMITER_REQUEST_BRUST", "10")
-
-		reqSec, errReq := strconv.Atoi(requestSecStr)
-		if errReq != nil {
-			panic("Invaid value for RATE_LIMITER_REQUEST_SEC")
-		}
-		brustSec, errB := strconv.Atoi(brustStr)
-		if errB != nil {
-			panic("Invaid value for RATE_LIMITER_REQUEST_BRUST")
-		}
+		reqSec := utils.GetIntEnv("RATE_LIMITER_REQUEST_SEC", 5)
+		brustSec := utils.GetIntEnv("RATE_LIMITER_REQUEST_BRUST", 10)
 
 		limiter := rate.NewLimiter(rate.Limit(reqSec), brustSec) // 5 requests/s and 10 burst
 		newClient := &Client{limiter, time.Now()}

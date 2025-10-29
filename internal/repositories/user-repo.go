@@ -19,16 +19,23 @@ func NewUserRepo(db sqlc.Querier) UserRepo {
 	}
 }
 
-func (ur *UserRepository) GetUsersV2(ctx context.Context, search *string, orderBy, sort string, offset, limit int32) ([]sqlc.User, error) {
+func (ur *UserRepository) GetUsersV2(ctx context.Context, search *string, orderBy, sort string, offset, limit int32, deleted bool) ([]sqlc.User, error) {
 	query := `SELECT * 
 FROM users 
-WHERE user_deleted_at IS NULL 
-AND (
+WHERE 
+ (
    	$1::TEXT IS NULL 
     OR $1::TEXT = ''
     OR user_email ILIKE '%' || $1 || '%' 
     OR user_fullname ILIKE '%'|| $1 || '%'
 )`
+
+	if deleted {
+		query += " AND user_deleted_at IS NOT NULL"
+	} else {
+		query += " AND user_deleted_at IS NULL"
+	}
+
 	order := "ASC"
 	if sort == "desc" {
 		order = "DESC"
@@ -166,8 +173,11 @@ func (ur *UserRepository) Delete(ctx context.Context, uuid uuid.UUID) error {
 func (ur *UserRepository) FindByEmail(email string) {
 }
 
-func (ur *UserRepository) UsersCount(ctx context.Context, search *string) (int64, error) {
-	total, er := ur.db.CountUsers(ctx, search)
+func (ur *UserRepository) UsersCount(ctx context.Context, search *string, deleted bool) (int64, error) {
+	total, er := ur.db.CountUsers(ctx, sqlc.CountUsersParams{
+		Search:  search,
+		Deleted: &deleted,
+	})
 	if er != nil {
 		return 0, er
 	}

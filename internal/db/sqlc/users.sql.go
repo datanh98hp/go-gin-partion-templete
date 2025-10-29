@@ -14,17 +14,26 @@ import (
 const countUsers = `-- name: CountUsers :one
 SELECT COUNT(*)
 FROM users 
-WHERE user_deleted_at IS NULL 
+WHERE (
+    $1::bool IS NULL 
+    OR  ($1::bool = TRUE AND user_deleted_at IS NOT NULL )
+    OR  ($1::bool = FALSE AND user_deleted_at IS NULL )
+)
 AND (
-    $1::TEXT IS NULL OR
-    $1::TEXT = '' OR
-    user_email ILIKE '%' || $1 || '%' 
-   OR user_fullname ILIKE '%'|| $1 || '%'
+    $2::TEXT IS NULL OR
+    $2::TEXT = '' OR
+    user_email ILIKE '%' || $2 || '%' 
+   OR user_fullname ILIKE '%'|| $2 || '%'
 )
 `
 
-func (q *Queries) CountUsers(ctx context.Context, search *string) (int64, error) {
-	row := q.db.QueryRow(ctx, countUsers, search)
+type CountUsersParams struct {
+	Deleted *bool   `json:"deleted"`
+	Search  *string `json:"search"`
+}
+
+func (q *Queries) CountUsers(ctx context.Context, arg CountUsersParams) (int64, error) {
+	row := q.db.QueryRow(ctx, countUsers, arg.Deleted, arg.Search)
 	var count int64
 	err := row.Scan(&count)
 	return count, err
@@ -71,7 +80,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 }
 
 const getUserByUUID = `-- name: GetUserByUUID :one
-SELECT user_id, user_uuid, user_email, user_fullname, user_password, user_age, user_status, user_level, user_deleted_at, user_created_at, user_updated_at FROM users WHERE user_uuid = $1
+SELECT user_id, user_uuid, user_email, user_fullname, user_password, user_age, user_status, user_level, user_deleted_at, user_created_at, user_updated_at FROM users WHERE user_uuid = $1 AND user_deleted_at IS NULL
 `
 
 func (q *Queries) GetUserByUUID(ctx context.Context, userUuid uuid.UUID) (User, error) {
@@ -167,6 +176,42 @@ type GetUsersCreatedAtDescParams struct {
 
 func (q *Queries) GetUsersCreatedAtDesc(ctx context.Context, arg GetUsersCreatedAtDescParams) ([]User, error) {
 	rows, err := q.db.Query(ctx, getUsersCreatedAtDesc, arg.Limit, arg.Offset, arg.Search)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []User{}
+	for rows.Next() {
+		var i User
+		if err := rows.Scan(
+			&i.UserID,
+			&i.UserUuid,
+			&i.UserEmail,
+			&i.UserFullname,
+			&i.UserPassword,
+			&i.UserAge,
+			&i.UserStatus,
+			&i.UserLevel,
+			&i.UserDeletedAt,
+			&i.UserCreatedAt,
+			&i.UserUpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getUsersDeleted = `-- name: GetUsersDeleted :many
+SELECT user_id, user_uuid, user_email, user_fullname, user_password, user_age, user_status, user_level, user_deleted_at, user_created_at, user_updated_at FROM users WHERE user_deleted_at IS NOT NULL
+`
+
+func (q *Queries) GetUsersDeleted(ctx context.Context) ([]User, error) {
+	rows, err := q.db.Query(ctx, getUsersDeleted)
 	if err != nil {
 		return nil, err
 	}

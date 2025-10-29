@@ -8,9 +8,9 @@ import (
 )
 
 type UserRepo interface {
-	GetUsersV2(ctx context.Context, search *string, orderBy, sort string, offset, limit int32) ([]sqlc.User, error)
+	GetUsersV2(ctx context.Context, search *string, orderBy, sort string, offset, limit int32, deleted bool) ([]sqlc.User, error)
 	GetUsers(ctx context.Context, search *string, orderBy, sort string, offset, limit int32) ([]sqlc.User, error)
-	UsersCount(ctx context.Context, search *string) (int64, error)
+	UsersCount(ctx context.Context, search *string, deleted bool) (int64, error)
 	AddUser(ctx context.Context, input sqlc.CreateUserParams) (sqlc.User, error)
 	GetUserByUUID(ctx context.Context, uuid uuid.UUID) (sqlc.User, error)
 	UpdateUser(ctx context.Context, input sqlc.UpdateUserByUUIDParams) (sqlc.User, error)
