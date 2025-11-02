@@ -11,11 +11,19 @@ import (
 )
 
 type Querier interface {
+<<<<<<< HEAD
 	CountUsers(ctx context.Context, search *string) (int64, error)
+=======
+	CountUsers(ctx context.Context, arg CountUsersParams) (int64, error)
+>>>>>>> 1bd3d85b166d78e8ef8b54770c445ebfac40b114
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	GetUserByUUID(ctx context.Context, userUuid uuid.UUID) (User, error)
 	GetUsersCreatedAtAsc(ctx context.Context, arg GetUsersCreatedAtAscParams) ([]User, error)
 	GetUsersCreatedAtDesc(ctx context.Context, arg GetUsersCreatedAtDescParams) ([]User, error)
+<<<<<<< HEAD
+=======
+	GetUsersDeleted(ctx context.Context) ([]User, error)
+>>>>>>> 1bd3d85b166d78e8ef8b54770c445ebfac40b114
 	GetUsersIdAsc(ctx context.Context, arg GetUsersIdAscParams) ([]User, error)
 	GetUsersIdDesc(ctx context.Context, arg GetUsersIdDescParams) ([]User, error)
 	RestoreUsers(ctx context.Context, userUuid uuid.UUID) (User, error)

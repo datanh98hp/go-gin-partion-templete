@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 version: "3.8"
 
 services:
@@ -16,3 +17,46 @@ services:
 
 volumes:
   pg_data:
+=======
+version: "3.8"
+
+services:
+  db:
+    image: postgres:17.5-alpine3.22
+    container_name: db
+    restart: unless-stopped  # tự reset nếu gặp lỗi, trừ khi bị dừng thủ công
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+  
+  redis:
+    image: redis:8.0-alpine
+    container_name: redis
+    restart: unless-stopped  # tự reset nếu gặp lỗi, trừ khi bị dừng thủ công
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_DB: ${REDIS_DB}
+      REDIS_USER: ${REDIS_USER}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+      - ./systems/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf  # run redis 
+    networks:
+      - app-network
+volumes:
+  pg_data:
+  redis-data:
+
+networks:
+  app-network:
+    driver: bridge
+>>>>>>> 1bd3d85b166d78e8ef8b54770c445ebfac40b114

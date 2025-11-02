@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package middleware
 
 import (
@@ -34,3 +35,38 @@ func ApiKeyMiddleware() gin.HandlerFunc {
 	}
 
 }
+=======
+package middleware
+
+import (
+	"log"
+	"net/http"
+	"os"
+
+	"github.com/gin-gonic/gin"
+)
+
+func ApiKeyMiddleware() gin.HandlerFunc {
+	expectedKey := os.Getenv("API_KEY")
+	if expectedKey == "" {
+		expectedKey = "secret-key"
+	}
+
+	return func(ctx *gin.Context) {
+		apiKey := ctx.GetHeader("X-API-Key")
+		log.Printf("---X-API-Key : %s", apiKey)
+		if apiKey == "" {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Missing X-API-Key"})
+			return
+		}
+
+		if apiKey != expectedKey {
+			log.Println("Invalid API Key")
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid API Key"})
+			return
+		}
+
+		ctx.Next()
+	}
+}
+>>>>>>> 1bd3d85b166d78e8ef8b54770c445ebfac40b114
