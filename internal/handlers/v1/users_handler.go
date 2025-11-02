@@ -46,7 +46,8 @@ func (uh *UsersHandler) GetUsers(ctx *gin.Context) {
 	////
 	dtos := dto_v1.MapUsersToDto(users) // convert model to list dto for response
 	paginationResponse := utils.NewPaginationResponse(dtos, query.Page, query.Limit, total)
-	utils.ResponseSuccess(ctx, http.StatusOK, "Users retrieved successfully", paginationResponse)
+	ctx.JSON(200, gin.H{"data": paginationResponse})
+	//utils.ResponseSuccess(ctx, http.StatusOK, "Users retrieved successfully", paginationResponse)
 }
 
 func (uh *UsersHandler) GetUserByUUID(ctx *gin.Context) {

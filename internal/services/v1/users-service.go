@@ -47,7 +47,6 @@ func (us *usersService) GetUsers(ctx *gin.Context, search *string, order_by, sor
 	}
 	if limit <= 0 {
 		envLimit := utils.GetIntEnv("LIMIT_ITEM_PER_PAGE", 10)
-
 		limit = int32(envLimit)
 	}
 

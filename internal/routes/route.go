@@ -22,7 +22,6 @@ func RegisterRoutes(r *gin.Engine, routes ...Route) {
 	recoveryLoger := utils.NewLoggerWithPath("./internal/logs/recovery.log", "error")
 	ratelimiterLoger := utils.NewLoggerWithPath("./internal/logs/ratelimit.log", "warning")
 	//add middleware
-	r.Use(gzip.Gzip(gzip.DefaultCompression))
 	r.Use(
 		middleware.RateLimiterMiddleware(ratelimiterLoger),
 		middleware.CORSMiddleware(),
