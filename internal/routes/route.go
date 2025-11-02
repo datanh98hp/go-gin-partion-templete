@@ -30,7 +30,7 @@ func RegisterRoutes(r *gin.Engine, routes ...Route) {
 		middleware.RecoveryMiddleware(recoveryLoger),
 		middleware.ApiKeyMiddleware(),
 	)
-	r.Use(gzip.Gzip(gzip.DefaultCompression))
+	r.Use(gzip.Gzip(gzip.DefaultCompression)) // gzip data to decrese size data response to fe
 	api_v1 := r.Group("/api/v1")
 	for _, route := range routes {
 		route.Register(api_v1)
