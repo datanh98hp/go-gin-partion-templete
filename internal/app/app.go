@@ -1,38 +1,102 @@
 package app
 
 import (
+	"context"
+	"log"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 	"user-management-api/internal/config"
+	"user-management-api/internal/db"
+	"user-management-api/internal/db/sqlc"
 	"user-management-api/internal/routes"
+	"user-management-api/internal/validations"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 type Module interface {
 	Route() routes.Route
 }
-
+type ModulesContext struct {
+	DB sqlc.Querier
+}
 type Application struct {
-	Config *config.Config
-	Router *gin.Engine
+	Config  *config.Config
+	Router  *gin.Engine
+	Modules []Module
 }
 
 func NewApplication(cfg *config.Config) *Application {
+
+	// Customize Recovery middleware to handle panic and return JSON response
+
 	r := gin.Default()
+
+	//Load .env file
+	loadEnv()
+	if err := db.InitializeDatabase(); err != nil { //db.InitializeDatabase()
+		log.Fatalf("Error initializing database: %v", err)
+	}
+	ctx := ModulesContext{
+		DB: db.DB,
+	}
+	//Call validator
+	if err := validations.InitValidator(); err != nil {
+		log.Fatalf("Error initializing validator: %v", err)
+	}
 	modules := []Module{
-		NewUserModule(),
+		/// add modules
+		NewUserModule(ctx),
 	}
 	routes.RegisterRoutes(r, getModuleRoutes(modules)...) // Register the routes
 
 	return &Application{
-		Config: cfg,
-		Router: r,
+		Config:  cfg,
+		Router:  r,
+		Modules: modules,
 	}
 
 }
 
-func (r *Application) Run() error {
+func (a *Application) Run() error {
 
-	return r.Router.Run(r.Config.ServerAddress)
+	srv := &http.Server{
+		Addr:    "" + a.Config.ServerAddress,
+		Handler: a.Router,
+	}
+
+	/// add channel to listen for interrupt or terminate signal from OS / kill -9
+	quit := make(chan os.Signal, 1)
+	// Listen for interrupt signals : termination signal
+	// syscall.SIGINT : sent by Ctrl+C
+	// syscall.SIGTERM : default signal sent by "kill" command
+	// syscall.SIGHUP : terminal closed
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
+
+	// another goroutine to listen for the signal
+	go func() {
+		log.Printf("Server is running at %s", a.Config.ServerAddress)
+		// Start serv
+		if err := srv.ListenAndServe(); err != http.ErrServerClosed {
+			log.Fatalf("Failed to run server: %s\n", err)
+		}
+	}()
+	<-quit // wait here until we get the signal
+	log.Println("Shutting down server...")
+	// block until we receive our signal.
+	context, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	//shutdown the application
+	if err := srv.Shutdown(context); err != nil {
+		log.Fatalf("Server forced to shutdown: %s", err)
+	}
+	log.Println("Server exited gracefully...")
+	return nil
+	//return a.Router.Run(":" + a.Config.ServerAddress)
 }
 
 func getModuleRoutes(modules []Module) []routes.Route {
@@ -41,4 +105,10 @@ func getModuleRoutes(modules []Module) []routes.Route {
 		routes[i] = module.Route()
 	}
 	return routes
+}
+func loadEnv() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Printf("Error loading .env file")
+	}
 }

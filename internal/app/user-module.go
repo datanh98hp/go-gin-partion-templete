@@ -1,28 +1,29 @@
 package app
 
 import (
-	"user-management-api/internal/handlers"
+	handlers_v1 "user-management-api/internal/handlers/v1"
 	"user-management-api/internal/repositories"
 	"user-management-api/internal/routes"
-	"user-management-api/internal/services"
+	v1 "user-management-api/internal/routes/v1"
+	services_v1 "user-management-api/internal/services/v1"
 )
 
 type UserModule struct {
 	routes routes.Route
 }
 
-func NewUserModule() *UserModule {
+func NewUserModule(ctx ModulesContext) *UserModule {
 	//initialize the routes
-	useRepo := repositories.NewUserRepo()
+	useRepo := repositories.NewUserRepo(ctx.DB)
 
 	//initialize the services
-	usersService := services.NewUsersService(useRepo)
+	usersService := services_v1.NewUsersService(useRepo)
 
 	//initialize the handlers
-	usersHandler := handlers.NewUsersHandler(usersService)
+	usersHandler := handlers_v1.NewUsersHandler(usersService)
 
 	//initialize the routes
-	userRoute := routes.NewUserRoute(usersHandler)
+	userRoute := v1.NewUserRoute(usersHandler)
 	return &UserModule{
 		routes: userRoute,
 	}
