@@ -1,2 +1,3 @@
 # Logs folder
-./internal/logs/
+internal/logs/
+internal/logs/*
