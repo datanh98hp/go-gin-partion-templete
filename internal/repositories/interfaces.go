@@ -17,5 +17,5 @@ type UserRepo interface {
 	SoftDeleteUser(ctx context.Context, uuid uuid.UUID) (sqlc.User, error)
 	Restore(ctx context.Context, uuid uuid.UUID) (sqlc.User, error)
 	Delete(ctx context.Context, uuid uuid.UUID) error
-	FindByEmail(email string)
+	GetByEmail(ctx context.Context, email string) (sqlc.User, error)
 }

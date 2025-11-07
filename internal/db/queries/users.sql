@@ -4,7 +4,10 @@ VALUES ($1, $2, $3, $4, $5, $6) RETURNING * ;
 
 -- name: GetUserByUUID :one
 SELECT * FROM users WHERE user_uuid = $1 AND user_deleted_at IS NULL;
-
+-- name: GetUserByEmail :one
+SELECT * FROM users
+WHERE user_deleted_at IS NULL
+AND user_email = $1;
 -- name: UpdateUserByUUID :one
 UPDATE users 
 SET 

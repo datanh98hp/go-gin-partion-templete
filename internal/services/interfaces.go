@@ -16,3 +16,9 @@ type UsersService interface {
 	RestoreUser(ctx *gin.Context, uuid uuid.UUID) (sqlc.User, error)
 	DeleteUser(ctx *gin.Context, uuid uuid.UUID) error
 }
+
+type AuthService interface {
+	Login(ctx *gin.Context, username, password string) (string, string, int, error)
+	Logout(ctx *gin.Context, refreshToken string) error
+	RefreshToken(ctx *gin.Context, refreshToken string) (string, string, int, error)
+}

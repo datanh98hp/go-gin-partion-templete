@@ -170,7 +170,14 @@ func (ur *UserRepository) Delete(ctx context.Context, uuid uuid.UUID) error {
 	return nil
 }
 
-func (ur *UserRepository) FindByEmail(email string) {
+func (ur *UserRepository) GetByEmail(ctx context.Context, email string) (sqlc.User, error) {
+	user, err := ur.db.GetUserByEmail(ctx, email)
+	if err != nil {
+		return sqlc.User{}, err
+	}
+
+	return user, nil
+
 }
 
 func (ur *UserRepository) UsersCount(ctx context.Context, search *string, deleted bool) (int64, error) {

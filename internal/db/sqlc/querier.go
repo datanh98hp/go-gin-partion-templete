@@ -13,6 +13,7 @@ import (
 type Querier interface {
 	CountUsers(ctx context.Context, arg CountUsersParams) (int64, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+	GetUserByEmail(ctx context.Context, userEmail string) (User, error)
 	GetUserByUUID(ctx context.Context, userUuid uuid.UUID) (User, error)
 	GetUsersCreatedAtAsc(ctx context.Context, arg GetUsersCreatedAtAscParams) ([]User, error)
 	GetUsersCreatedAtDesc(ctx context.Context, arg GetUsersCreatedAtDescParams) ([]User, error)

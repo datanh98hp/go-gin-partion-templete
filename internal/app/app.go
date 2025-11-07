@@ -13,6 +13,8 @@ import (
 	"user-management-api/internal/db/sqlc"
 	"user-management-api/internal/routes"
 	"user-management-api/internal/validations"
+	"user-management-api/pkg/auth"
+	"user-management-api/pkg/cache"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -47,7 +49,10 @@ func NewApplication(cfg *config.Config) *Application {
 	//Redis
 
 	redisClient := config.NewRedisClient()
+	cacheRedisService := cache.NewRedisCacheService(redisClient)
+	tokenService := auth.NewJWTService(cacheRedisService)
 
+	// create modules context
 	ctx := ModulesContext{
 		DB:    db.DB,
 		Redis: redisClient,
@@ -59,8 +64,9 @@ func NewApplication(cfg *config.Config) *Application {
 	modules := []Module{
 		/// add modules
 		NewUserModule(ctx),
+		NewAuthModule(ctx, tokenService, cacheRedisService),
 	}
-	routes.RegisterRoutes(r, getModuleRoutes(modules)...) // Register the routes
+	routes.RegisterRoutes(r, tokenService, cacheRedisService, getModuleRoutes(modules)...) // Register the routes
 
 	return &Application{
 		Config:  cfg,

@@ -9,10 +9,12 @@ import (
 type ErrorCode string // type alias string
 // define error code
 const (
-	ErrorCodeBadRequest ErrorCode = "BAD_REQUEST"
-	ErrorCodeNotFound   ErrorCode = "NOT_FOUND"
-	ErrorCodeInternal   ErrorCode = "INTERNAL_SERVER_ERROR"
-	ErrorCodeConflict   ErrorCode = "CONFLICT"
+	ErrorCodeBadRequest  ErrorCode = "BAD_REQUEST"
+	ErrorCodeNotFound    ErrorCode = "NOT_FOUND"
+	ErrorCodeInternal    ErrorCode = "INTERNAL_SERVER_ERROR"
+	ErrorCodeConflict    ErrorCode = "CONFLICT"
+	ErrCodeUnauthorized  ErrorCode = "UNAUTHORIZED"
+	ErrorTooManyRequests ErrorCode = "TOO_MANY_REQUESTS"
 )
 
 type AppError struct {
@@ -90,6 +92,8 @@ func httpStatusFromCode(code ErrorCode) int {
 		return http.StatusInternalServerError
 	case ErrorCodeConflict:
 		return http.StatusConflict
+	case ErrorTooManyRequests:
+		return http.StatusTooManyRequests
 	default:
 		return http.StatusInternalServerError
 	}
