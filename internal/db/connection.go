@@ -26,7 +26,7 @@ func InitializeDatabase() error {
 	}
 
 	//log
-	sqlLogger := utils.NewLoggerWithPath("./internal/logs/sql.log", "infor")
+	sqlLogger := utils.NewLoggerWithPath("sql.log", "infor")
 	conf.ConnConfig.Tracer = &tracelog.TraceLog{
 		Logger: &pgx.PgxZerologTracer{
 			Logger:         *sqlLogger,

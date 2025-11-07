@@ -17,7 +17,6 @@ import (
 	"user-management-api/pkg/cache"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -40,8 +39,6 @@ func NewApplication(cfg *config.Config) *Application {
 
 	r := gin.Default()
 
-	//Load .env file
-	loadEnv()
 	//postgres
 	if err := db.InitializeDatabase(); err != nil { //db.InitializeDatabase()
 		log.Fatalf("Error initializing database: %v", err)
@@ -119,10 +116,4 @@ func getModuleRoutes(modules []Module) []routes.Route {
 		routes[i] = module.Route()
 	}
 	return routes
-}
-func loadEnv() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Printf("Error loading .env file")
-	}
 }

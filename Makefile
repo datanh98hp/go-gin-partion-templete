@@ -18,6 +18,12 @@ remove_container:
 # Run the Go server
 server:
 	go run ./cmd/api/main.go
+# 	Buid binary file
+build:
+	go build -o ./bin/myapp ./cmd/api/main.go
+# 	Run binary file
+run_binary:
+	./bin/myapp
 # Generate sqlc
 sqlc:
 	sqlc generate
@@ -47,4 +53,4 @@ migrate_drop:
 migrate_goto:
 	migrate -path $(MIRGRATION_DIR) -database "$(CONN_STRING)" goto $(version)
 	
-.PHONY: importdb exportdb server start_container remove_container migrate_create migrate_up migrate_down migrate_force migrate_goto migrate_drop migrate_rollback sqlc
+.PHONY: importdb exportdb build server run_binary start_container remove_container migrate_create migrate_up migrate_down migrate_force migrate_goto migrate_drop migrate_rollback sqlc

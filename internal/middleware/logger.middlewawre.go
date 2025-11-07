@@ -139,7 +139,7 @@ func LoggerMiddleware(httpLogger *zerolog.Logger) gin.HandlerFunc {
 			Str("trace_id", logger.GetTraceId(c.Request.Context())).
 			Str("method", c.Request.Method).
 			Str("path", c.Request.URL.Path).
-			Str("quey", c.Request.URL.RawQuery).
+			Str("query", c.Request.URL.RawQuery).
 			Str("ip", c.ClientIP()).
 			Str("user_agent", c.Request.UserAgent()).
 			Str("referer", c.Request.Referer()).
