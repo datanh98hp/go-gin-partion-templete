@@ -14,19 +14,6 @@ import (
 const countUsers = `-- name: CountUsers :one
 SELECT COUNT(*)
 FROM users 
-<<<<<<< HEAD
-WHERE user_deleted_at IS NULL 
-AND (
-    $1::TEXT IS NULL OR
-    $1::TEXT = '' OR
-    user_email ILIKE '%' || $1 || '%' 
-   OR user_fullname ILIKE '%'|| $1 || '%'
-)
-`
-
-func (q *Queries) CountUsers(ctx context.Context, search *string) (int64, error) {
-	row := q.db.QueryRow(ctx, countUsers, search)
-=======
 WHERE (
     $1::bool IS NULL 
     OR  ($1::bool = TRUE AND user_deleted_at IS NOT NULL )
@@ -47,7 +34,6 @@ type CountUsersParams struct {
 
 func (q *Queries) CountUsers(ctx context.Context, arg CountUsersParams) (int64, error) {
 	row := q.db.QueryRow(ctx, countUsers, arg.Deleted, arg.Search)
->>>>>>> 1bd3d85b166d78e8ef8b54770c445ebfac40b114
 	var count int64
 	err := row.Scan(&count)
 	return count, err
@@ -93,12 +79,33 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	return i, err
 }
 
+const getUserByEmail = `-- name: GetUserByEmail :one
+SELECT user_id, user_uuid, user_email, user_fullname, user_password, user_age, user_status, user_level, user_deleted_at, user_created_at, user_updated_at FROM users
+WHERE user_deleted_at IS NULL
+AND user_email = $1
+`
+
+func (q *Queries) GetUserByEmail(ctx context.Context, userEmail string) (User, error) {
+	row := q.db.QueryRow(ctx, getUserByEmail, userEmail)
+	var i User
+	err := row.Scan(
+		&i.UserID,
+		&i.UserUuid,
+		&i.UserEmail,
+		&i.UserFullname,
+		&i.UserPassword,
+		&i.UserAge,
+		&i.UserStatus,
+		&i.UserLevel,
+		&i.UserDeletedAt,
+		&i.UserCreatedAt,
+		&i.UserUpdatedAt,
+	)
+	return i, err
+}
+
 const getUserByUUID = `-- name: GetUserByUUID :one
-<<<<<<< HEAD
-SELECT user_id, user_uuid, user_email, user_fullname, user_password, user_age, user_status, user_level, user_deleted_at, user_created_at, user_updated_at FROM users WHERE user_uuid = $1
-=======
 SELECT user_id, user_uuid, user_email, user_fullname, user_password, user_age, user_status, user_level, user_deleted_at, user_created_at, user_updated_at FROM users WHERE user_uuid = $1 AND user_deleted_at IS NULL
->>>>>>> 1bd3d85b166d78e8ef8b54770c445ebfac40b114
 `
 
 func (q *Queries) GetUserByUUID(ctx context.Context, userUuid uuid.UUID) (User, error) {
@@ -224,8 +231,6 @@ func (q *Queries) GetUsersCreatedAtDesc(ctx context.Context, arg GetUsersCreated
 	return items, nil
 }
 
-<<<<<<< HEAD
-=======
 const getUsersDeleted = `-- name: GetUsersDeleted :many
 SELECT user_id, user_uuid, user_email, user_fullname, user_password, user_age, user_status, user_level, user_deleted_at, user_created_at, user_updated_at FROM users WHERE user_deleted_at IS NOT NULL
 `
@@ -262,7 +267,6 @@ func (q *Queries) GetUsersDeleted(ctx context.Context) ([]User, error) {
 	return items, nil
 }
 
->>>>>>> 1bd3d85b166d78e8ef8b54770c445ebfac40b114
 const getUsersIdAsc = `-- name: GetUsersIdAsc :many
 SELECT user_id, user_uuid, user_email, user_fullname, user_password, user_age, user_status, user_level, user_deleted_at, user_created_at, user_updated_at 
 FROM users 

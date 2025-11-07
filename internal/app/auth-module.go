@@ -6,29 +6,31 @@ import (
 	"user-management-api/internal/routes"
 	v1 "user-management-api/internal/routes/v1"
 	services_v1 "user-management-api/internal/services/v1"
+	"user-management-api/pkg/auth"
+	"user-management-api/pkg/cache"
 )
 
-type UserModule struct {
+type AuthModule struct {
 	routes routes.Route
 }
 
-func NewUserModule(ctx ModulesContext) *UserModule {
+func NewAuthModule(ctx ModulesContext, tokenService auth.TokenService, cacheService cache.RedisCacheService) *AuthModule {
 	//initialize the routes
 	useRepo := repositories.NewUserRepo(ctx.DB)
 
 	//initialize the services
-	usersService := services_v1.NewUsersService(useRepo, ctx.Redis)
+	authService := services_v1.NewAuthService(useRepo, tokenService, cacheService)
 
 	//initialize the handlers
-	usersHandler := handlers_v1.NewUsersHandler(usersService)
+	authHandler := handlers_v1.NewAuthHandler(authService)
 
 	//initialize the routes
-	userRoute := v1.NewUserRoute(usersHandler)
-	return &UserModule{
+	userRoute := v1.NewAuthRoute(authHandler)
+	return &AuthModule{
 		routes: userRoute,
 	}
 }
 
-func (um *UserModule) Route() routes.Route {
+func (um *AuthModule) Route() routes.Route {
 	return um.routes
 }
