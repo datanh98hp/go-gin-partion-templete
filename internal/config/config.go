@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"os"
 	"user-management-api/internal/utils"
 )
 
@@ -20,13 +21,13 @@ type Config struct {
 
 func NewConfig() *Config {
 	return &Config{
-		ServerAddress: utils.GetEnv("PORT", "localhost:8080"),
+		ServerAddress: fmt.Sprintf(":%s", os.Getenv("SERVER_PORT")),
 		DB: DatabaseConfig{
 			Host:     utils.GetEnv("DB_HOST", "localhost"),
 			Port:     utils.GetEnv("DB_PORT", "5432"), // Ensure this is converted to int as needed
 			User:     utils.GetEnv("DB_USER", "postgres"),
 			Password: utils.GetEnv("DB_PASS", "postgres"),
-			DBName:   utils.GetEnv("DB_NAME", "postgres"),
+			DBName:   utils.GetEnv("DB_NAME", "myapp"),
 			SslMode:  utils.GetEnv("DB_SSLMODE", "disable"),
 		},
 	}
