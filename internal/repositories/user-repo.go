@@ -191,3 +191,12 @@ func (ur *UserRepository) UsersCount(ctx context.Context, search *string, delete
 	return total, nil
 
 }
+
+func (ur *UserRepository) UpdatePassword(ctx context.Context, input sqlc.UpdatePasswordParams) (sqlc.User, error) {
+	user, err := ur.db.UpdatePassword(ctx, input)
+	if err != nil {
+		return sqlc.User{}, err
+	}
+
+	return user, nil
+}

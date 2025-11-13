@@ -21,7 +21,7 @@ type Route interface {
 // It takes a variable number of Route objects, registers them into the "/api/v1" group and adds them to the given gin.Engine.
 func RegisterRoutes(r *gin.Engine, authService auth.TokenService, cacheService cache.RedisCacheService, routes ...Route) {
 	// create logger into file with lumberjack lib
-	httpLoger := utils.NewLoggerWithPath("app.log", "infor")
+	httpLoger := utils.NewLoggerWithPath("http.log", "infor")
 	recoveryLoger := utils.NewLoggerWithPath("recovery.log", "error")
 	ratelimiterLoger := utils.NewLoggerWithPath("ratelimit.log", "warning")
 	//add middleware

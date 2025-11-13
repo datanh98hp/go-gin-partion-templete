@@ -18,4 +18,5 @@ type UserRepo interface {
 	Restore(ctx context.Context, uuid uuid.UUID) (sqlc.User, error)
 	Delete(ctx context.Context, uuid uuid.UUID) error
 	GetByEmail(ctx context.Context, email string) (sqlc.User, error)
+	UpdatePassword(ctx context.Context, input sqlc.UpdatePasswordParams) (sqlc.User, error)
 }

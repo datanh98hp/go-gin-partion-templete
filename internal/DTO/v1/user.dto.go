@@ -32,7 +32,7 @@ type GetUsersByQuery struct {
 type CreateUsersInput struct {
 	Name     string `json:"name" binding:"required"`
 	Email    string `json:"email" binding:"required,email,email_advanced"`
-	Age      int32  `json:"age" binding:omitempty,gt=18"`
+	Age      int32  `json:"age" binding:"omitempty,gt=18"`
 	Password string `json:"password" binding:"required,min=6,password_strong"`
 	Status   int32  `json:"status" binding:"required,oneof=1 2 3"`
 	Level    int32  `json:"level" binding:"required,oneof=1 2 3"`

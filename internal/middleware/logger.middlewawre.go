@@ -106,30 +106,27 @@ func LoggerMiddleware(httpLogger *zerolog.Logger) gin.HandlerFunc {
 		statusCode := c.Writer.Status()
 
 		duration := time.Since(start)
-		logEvent := httpLogger.Info()
+
 		// response
 		/// multipart/form-data
 		responseContentType := c.Writer.Header().Get("Content-Type")
 
 		responseBodyRaw := customeWriter.body.String()
 
-		var respponseBodyParsed interface{}
+		var responseBodyParsed interface{}
 		if strings.HasPrefix(responseContentType, "image/") {
-			// image type
-			respponseBodyParsed = "[BINARY-DATA]"
-
-		} else if (strings.HasPrefix(responseContentType, "application/json") ||
-			strings.HasPrefix(strings.TrimSpace(responseBodyRaw), "{")) ||
+			responseBodyParsed = "[BINARY DATA]"
+		} else if strings.HasPrefix(responseContentType, "application/json") ||
+			strings.HasPrefix(strings.TrimSpace(responseBodyRaw), "{") ||
 			strings.HasPrefix(strings.TrimSpace(responseBodyRaw), "[") {
-			// json type
-			if err := json.Unmarshal([]byte(responseBodyRaw), &respponseBodyParsed); err != nil {
-				respponseBodyParsed = responseBodyRaw
+			if err := json.Unmarshal([]byte(responseBodyRaw), &responseBodyParsed); err != nil {
+				responseBodyParsed = responseBodyRaw
 			}
 		} else {
-			respponseBodyParsed = responseBodyRaw
+			responseBodyParsed = responseBodyRaw
 		}
 		//log.Printf("responseBodyRaw: %s", responseBodyRaw)
-
+		logEvent := httpLogger.Info()
 		if statusCode >= 500 {
 			logEvent = httpLogger.Error()
 		} else if statusCode >= 400 {
@@ -152,7 +149,7 @@ func LoggerMiddleware(httpLogger *zerolog.Logger) gin.HandlerFunc {
 			Str("time", time.Now().Format("2006-01-02T15:04:05+07:00")).
 			Interface("header", c.Request.Header).
 			Interface("request_body", requestBody).
-			Interface("response_body", respponseBodyParsed).
+			Interface("response_body", responseBodyParsed).
 			Int64("duration", duration.Microseconds()).
 			Msg("HTTP request logs------")
 	}
