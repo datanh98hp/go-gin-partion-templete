@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"io"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/rs/zerolog"
@@ -25,6 +26,8 @@ type ContextKey string
 
 const TraceIdKey ContextKey = "trace_id"
 
+var Log *zerolog.Logger
+
 func NewLogger(config LoggerConfig) *zerolog.Logger {
 
 	zerolog.TimeFieldFormat = time.RFC3339 //set time format in log
@@ -37,7 +40,12 @@ func NewLogger(config LoggerConfig) *zerolog.Logger {
 
 	// If dev mode, use console writer
 	if config.IsDev == "development" {
-		writer = PrettyLogJSONWriter{Writer: os.Stdout}
+		if strings.Contains(config.FileName, "app.log") {
+			writer = zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: time.RFC3339}
+		} else {
+			writer = PrettyLogJSONWriter{Writer: os.Stdout}
+		}
+
 	} else {
 		writer = &lumberjack.Logger{
 			Filename:   config.FileName,
@@ -51,6 +59,11 @@ func NewLogger(config LoggerConfig) *zerolog.Logger {
 
 	logger := zerolog.New(writer).With().Timestamp().Logger()
 	return &logger
+}
+
+// /
+func InitLogger(config LoggerConfig) {
+	Log = NewLogger(config)
 }
 
 type PrettyLogJSONWriter struct {

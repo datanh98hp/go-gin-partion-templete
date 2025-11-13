@@ -1,17 +1,21 @@
 package services_v1
 
 import (
+	"fmt"
 	"strings"
 	"sync"
 	"time"
+	"user-management-api/internal/db/sqlc"
 	"user-management-api/internal/repositories"
 	"user-management-api/internal/services"
 	"user-management-api/internal/utils"
 	"user-management-api/pkg/auth"
 	"user-management-api/pkg/cache"
+	"user-management-api/pkg/logger"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/redis/go-redis/v9"
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/time/rate"
 )
@@ -20,7 +24,7 @@ type authService struct {
 	// Add necessary fields, e.g., database connection, config, etc.
 	userRepo     repositories.UserRepo
 	tokenService auth.TokenService
-	cache        cache.RedisCacheService
+	cacheService cache.RedisCacheService
 }
 type LoginAttempt struct {
 	Limiter  *rate.Limiter
@@ -38,7 +42,7 @@ func NewAuthService(userRepo repositories.UserRepo, tokenService auth.TokenServi
 	return &authService{
 		userRepo:     userRepo,
 		tokenService: tokenService,
-		cache:        cache,
+		cacheService: cache,
 	}
 }
 
@@ -150,7 +154,7 @@ func (as *authService) Logout(ctx *gin.Context, refreshToken string) error {
 		exp := time.Unix(int64(expUnix), 0)
 		key := "blacklist:" + jti
 		ttl := time.Until(exp)
-		as.cache.Set(key, "revoke", ttl)
+		as.cacheService.Set(key, "revoke", ttl)
 	}
 
 	// validate the refresh token
@@ -200,4 +204,76 @@ func (as *authService) RefreshToken(ctx *gin.Context, refreshToken string) (stri
 	}
 
 	return newAccessToken, newRefreshToken.Token, int(auth.AccessTokenTTL.Seconds()), nil
+}
+
+func (as *authService) RequestForgotPassword(ctx *gin.Context, email string) error {
+	context := ctx.Request.Context()
+	rateLimitKey := fmt.Sprintf("reset:ratelimit:%s", email)
+	// check exist reset key in cache
+	exist, err := as.cacheService.Exists(rateLimitKey)
+	if err == nil && exist {
+		return utils.NewError("Please wait before requesting another password reset.", utils.ErrorTooManyRequests)
+	}
+
+	email = utils.NormalizeString(email)
+
+	user, err := as.userRepo.GetByEmail(context, email)
+	if err != nil {
+		return utils.NewError("Invalid email or password", utils.ErrorCodeNotFound)
+	}
+	// send randome code to email
+	str, err := utils.GenerateRandomeString(16)
+	if err != nil {
+		return utils.NewError("Failed to  generate randome string", utils.ErrorCodeInternal)
+	}
+
+	// save/set life string in cache
+	err = as.cacheService.Set("reset:"+str, user.UserUuid, 1*time.Hour)
+	if err != nil {
+		return utils.NewError("Failed to store reset string password", utils.ErrorCodeInternal)
+	}
+
+	err = as.cacheService.Set(rateLimitKey, "1", 5*time.Minute)
+	if err != nil {
+		return utils.NewError("Failed to store ratelimit forget password", utils.ErrorCodeInternal)
+	}
+
+	resetLink := fmt.Sprintf("http://fontend.domain/reset-password?token=%s", str)
+	logger.Log.Info().Msg(resetLink)
+	/// write cache
+
+	return nil
+}
+
+func (as *authService) ResetPassword(ctx *gin.Context, token string, newPassword string) error {
+	context := ctx.Request.Context()
+	var userUUID string
+	err := as.cacheService.Get("reset:"+token, &userUUID)
+	//log.Printf("---- userUUID:%s", userUUID)
+	if err == redis.Nil || userUUID == "" {
+		return utils.NewError("Invalid or expired token", utils.ErrorCodeNotFound)
+	}
+	if err != nil {
+		return utils.NewError("Failed to get reset token", utils.ErrorCodeInternal)
+	}
+	useruuid, err := uuid.Parse(userUUID)
+	if err != nil {
+		return utils.NewError("UUid is invalid", utils.ErrorCodeInternal)
+	}
+	// new Pass
+	hashed, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+	if err != nil {
+		return utils.NewError("Failed to hash password", utils.ErrorCodeInternal)
+	}
+	var input = sqlc.UpdatePasswordParams{
+		UserPassword: string(hashed),
+		UserUuid:     useruuid,
+	}
+	_, err = as.userRepo.UpdatePassword(context, input)
+	if err != nil {
+		return utils.NewError("Update password failed", utils.ErrorCodeInternal)
+	}
+	// del cache reset:
+	as.cacheService.Clear("reset:" + token)
+	return nil
 }

@@ -15,6 +15,7 @@ import (
 	"user-management-api/internal/validations"
 	"user-management-api/pkg/auth"
 	"user-management-api/pkg/cache"
+	"user-management-api/pkg/logger"
 
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
@@ -35,6 +36,12 @@ type Application struct {
 
 func NewApplication(cfg *config.Config) *Application {
 
+	//Call validator
+	if err := validations.InitValidator(); err != nil {
+		log.Fatalf("Error initializing validator: %v", err)
+		logger.Log.Fatal().Err(err).Msg("Error initializing validator" + err.Error())
+	}
+
 	// Customize Recovery middleware to handle panic and return JSON response
 
 	r := gin.Default()
@@ -42,6 +49,7 @@ func NewApplication(cfg *config.Config) *Application {
 	//postgres
 	if err := db.InitializeDatabase(); err != nil { //db.InitializeDatabase()
 		log.Fatalf("Error initializing database: %v", err)
+		logger.Log.Fatal().Err(err).Msg("Error initializing database" + err.Error())
 	}
 	//Redis
 
@@ -54,10 +62,7 @@ func NewApplication(cfg *config.Config) *Application {
 		DB:    db.DB,
 		Redis: redisClient,
 	}
-	//Call validator
-	if err := validations.InitValidator(); err != nil {
-		log.Fatalf("Error initializing validator: %v", err)
-	}
+
 	modules := []Module{
 		/// add modules
 		NewUserModule(ctx),
@@ -91,21 +96,26 @@ func (a *Application) Run() error {
 	// another goroutine to listen for the signal
 	go func() {
 		log.Printf("Server is running at %s", a.Config.ServerAddress)
+		logger.Log.Info().Msgf("Server is running at %s", a.Config.ServerAddress)
 		// Start serv
 		if err := srv.ListenAndServe(); err != http.ErrServerClosed {
+			logger.Log.Fatal().Err(err).Msgf("Failed to run server %s", err.Error())
 			log.Fatalf("Failed to run server: %s\n", err)
 		}
 	}()
 	<-quit // wait here until we get the signal
 	log.Println("Shutting down server...")
+	logger.Log.Warn().Msgf("Shutting down server...")
 	// block until we receive our signal.
 	context, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	//shutdown the application
 	if err := srv.Shutdown(context); err != nil {
+		logger.Log.Fatal().Err(err).Msgf("Server forced to shutdown: %s", err)
 		log.Fatalf("Server forced to shutdown: %s", err)
 	}
 	log.Println("Server exited gracefully...")
+	logger.Log.Warn().Msgf("Server exited gracefully...")
 	return nil
 	//return a.Router.Run(":" + a.Config.ServerAddress)
 }

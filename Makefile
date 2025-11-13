@@ -4,7 +4,9 @@ export
 MIRGRATION_DIR = internal/db/migrations
 # MIRGRATION_DIR = .//nternal//db//migrations
 CONN_STRING = postgresql://${DB_USER}:${DB_PASS}@$(DB_HOST):$(DB_PORT)/${DB_NAME}?sslmode=${DB_SSLMODE}
-
+PROD_COMPOSE=docker-compose.prod.yml
+NOAPP_COMPOSE=docker-compose.noapp.yml
+DEV_COMPOSE=docker-compose.dev.yml
 ENV_FILE=.env
 # Import and export databases
 importdb:
@@ -52,5 +54,37 @@ migrate_drop:
 # example : make mirgrate_goto version=1 --- to migrate to version 1
 migrate_goto:
 	migrate -path $(MIRGRATION_DIR) -database "$(CONN_STRING)" goto $(version)
-	
-.PHONY: importdb exportdb build server run_binary start_container remove_container migrate_create migrate_up migrate_down migrate_force migrate_goto migrate_drop migrate_rollback sqlc
+
+# Build container for noapp
+noapp:
+	docker compose -f $(NOAPP_COMPOSE) down
+	docker compose -f $(NOAPP_COMPOSE) --env-file $(ENV_FILE) up -d --build
+# stop all container noapp
+stop-noapp:
+	docker compose -f $(NOAPP_COMPOSE) down
+# --------------------------------
+# Build container for dev
+dev:
+	docker compose -f $(DEV_COMPOSE) down
+	docker compose -f $(DEV_COMPOSE) --env-file $(ENV_FILE) up --build
+# stop all container dev
+stop-dev:
+	docker compose -f $(DEV_COMPOSE) down
+
+# -----------------------------------
+# Build container for production
+prod:
+	docker compose -f $(PROD_COMPOSE) down
+	docker compose -f $(PROD_COMPOSE) --env-file $(ENV_FILE) up -d --build
+# stop all container production
+stop-prod:
+	docker compose -f $(PROD_COMPOSE) down
+# view logs product
+log-prod:
+	docker compose -f $(PROD_COMPOSE) logs -f --tail=100
+# Go to container api
+bash:
+	docker exec -it go-api /bin/sh
+
+
+.PHONY: importdb exportdb build server run_binary start_container remove_container migrate_create migrate_up migrate_down migrate_force migrate_goto migrate_drop migrate_rollback sqlc prod stop-prod log-prod noapp stop-noapp dev stop-dev bash 

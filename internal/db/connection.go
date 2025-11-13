@@ -8,6 +8,7 @@ import (
 	"user-management-api/internal/config"
 	"user-management-api/internal/db/sqlc"
 	"user-management-api/internal/utils"
+	"user-management-api/pkg/logger"
 	"user-management-api/pkg/pgx"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -22,7 +23,8 @@ func InitializeDatabase() error {
 
 	conf, err := pgxpool.ParseConfig(connStr)
 	if err != nil {
-		return fmt.Errorf("Error parsing config : %v", err)
+		logger.Log.Err(err).Msgf("error parsing config: %v", err.Error())
+		return fmt.Errorf("error parsing config: %v", err.Error())
 	}
 
 	//log
@@ -47,6 +49,7 @@ func InitializeDatabase() error {
 
 	DBpool, err = pgxpool.NewWithConfig(context, conf)
 	if err != nil {
+		logger.Log.Err(err).Msgf("error creating DB pool: %v", err.Error())
 		return fmt.Errorf("error creating DB pool: %v", err)
 	}
 	// Create a new Queries instance using the established connection pool
@@ -54,7 +57,8 @@ func InitializeDatabase() error {
 
 	// Ping the database to ensure the connection is established
 	if err := DBpool.Ping(context); err != nil {
-		return fmt.Errorf("Unable to ping database: %v", err)
+		logger.Log.Err(err).Msgf("unable to ping database: %v", err.Error())
+		return fmt.Errorf("unable to ping database: %v", err.Error())
 	}
 
 	log.Println("Connected")
