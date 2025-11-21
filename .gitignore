@@ -1,4 +1,5 @@
 # Logs folder
 internal/logs/
 internal/logs/*
-tmp/*.log
+tmp/*
+bin/*
