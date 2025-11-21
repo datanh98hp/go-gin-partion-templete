@@ -1,158 +1,46 @@
-{"level":"info","time":"2025-11-09T14:31:13Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-09T14:31:13Z","message":"Server is running at :8081"}
-{"level":"info","trace_id":"5287ff8b-796b-469b-9526-e6c68232316a","method":"POST","path":"/api/v1/auth","query":"","ip":"127.0.0.1","user_agent":"PostmanRuntime/7.50.0","referer":"","protocol":"HTTP/1.1","host":"localhost:8081","remote_address":"127.0.0.1:53213","request_uri":"/api/v1/auth","content_length":63,"status_code":200,"time":"2025-11-09T14:31:18+07:00","header":{"Accept":["*/*"],"Accept-Encoding":["gzip, deflate, br"],"Connection":["keep-alive"],"Content-Length":["63"],"Content-Type":["application/json"],"Postman-Token":["6c0726a5-ecd3-4d33-9f25-51eb7e4a877c"],"User-Agent":["PostmanRuntime/7.50.0"],"X-Api-Key":["45ad431d-263e-4827-8255-372e08dd7985"]},"request_body":{"email":"dat198hp@gmail.vn","password":"123456a@A"},"response_body":"\u001f\ufffd\b\u0000\u0000\u0000\u0000\u0000\u0000\ufffd<\ufffdMo\ufffd8\u0000\ufffdῲ\ufffd9[aH\ufffdM\ufffd=4\ufffd#\ufffd`ʗ\u0013\ufffdR\ufffd!\ufffd\u0001\u0003\ufffd\ufffd\u0002\ufffd\ufffd\ufffdG\u001a\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\u001b詘n\u001al\ufffd\ufffdq^k\rV@\ufffdZ\u0017\ufffd\u001alA0\\d\ufffdϟs\ufffdu`\u0005\ufffdb*\ufffd\ufffd\u001b\u0014\ufffd\ufffd\ufffd4\ufffdu\u000f\ufffd\ufffd^|Qz\\F\ufffdG\ufffd\u0003A,\ufffdF}\ufffd\ufffd\ufffd\ufffd\u0005\ufffd\ufffd\ufffd\ufffd\ufffd\ufffdS\ufffd\ufffd-=%\u00025\ufffd\ufffd\u000e­\ufffd\u0018\ufffd\ufffdz\ufffds\u00172ۍ\ufffd1\ufffdc2\ufffd\ufffd1\u0019<ev\ufffd&\u000b\ufffd\ufffd\u001c\u001d\ufffdY8$\ufffd\u001e\ufffdfNb2R\ufffd\ufffd\ufffdL\ufffdt\u0007z\ufffd}\u0010\ufffd\ufffdS\ufffd\ufffd\b\ufffd\ufffd\ufffdaMzpu\ufffd\ufffd\ufffdT\ufffd\ufffd\ufffd\ufffd \u000e\u001b\u0013sC\ufffd\ufffd[\ufffd\tU\ufffd\u001b\ufffdP\ufffd\ufffd\ufffdl&V\u000e\ufffd.Yp+\ufffdTUfF\ufffdC|b\u0012[l\ufffdJ\ufffd\ufffd\u0010Z\ufffdt\ufffd\ufffd\ufffd_U\ufffd\ufffd\u0018V\u001fq#\ufffdҙ\ufffd\ufffdD`\ufffd\ufffd\ufffd\ufffd]\ufffd\ufffd\ufffd\ufffdf\ufffd\ufffd\ufffd.\ufffdi\ufffdq\ufffd\ufffd\ufffd\ufffd\u001f\ufffd)\ufffdQ\ufffdX\ufffdAf\ufffd]L\ufffd\ufffdh\ufffd\ufffd\u0007_\ufffd\u000bR\ufffdP\ufffd\ufffdTx\ufffd&8΂\ufffd\ufffd\ufffdUw+\ufffd\ufffd/\ufffdY\ufffd\ufffd\ufffd`\ufffdU^+#\ufffd V\ufffdE\u001f9d\u0012\ufffdP\ufffd*\ufffdb\u0018\ufffdt\ufffdl\ufffd\u000bS\ufffd\ufffd\ufffd%m\u0012\u0015fow\ufffdQy\ufffd\ufffd>c\ufffd\ufffdrw\ufffdf\ufffdǅH\ufffdko\ufffdx\ufffd\ufffd\ufffd8\ufffd\ufffd0\ufffd\ufffd+mu\ufffd\ufffd!{\u0003+p\ufffd\ufffd\ufffdZ\ufffd\ufffd\ufffd\u00069\ufffd;\ufffd@\ufffd\ufffds\ufffd\ufffd\ufffdi\ufffda\ufffdyi-o\ufffd\ufffd\ufffd<\ufffd\ufffd\ufffd\ufffd\ufffd_v\ufffd\ufffd\ufffd\ufffd\u0002\ufffd<\ufffdk\ufffd?e\u000f\ufffd\u001b\ufffd\ufffd\ufffd\ufffd\u0015\u0000\u0000\ufffd\ufffdٮE\ufffdc\u0002\u0000\u0000","duration":68623,"time":"2025-11-09T14:31:18Z","message":"HTTP request logs------"}
-{"level":"warn","trace_id":"b1682276-ca4e-479c-8189-b8bb3cdcc282","method":"GET","path":"/","query":"","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0","referer":"","protocol":"HTTP/1.1","host":"localhost:8081","remote_address":"127.0.0.1:63740","request_uri":"/","content_length":0,"status_code":400,"time":"2025-11-09T14:32:28+07:00","header":{"Accept":["text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"],"Accept-Encoding":["gzip, deflate, br, zstd"],"Accept-Language":["vi,en-US;q=0.9,en-GB;q=0.8,en;q=0.7"],"Connection":["keep-alive"],"Sec-Ch-Ua":["\"Chromium\";v=\"142\", \"Microsoft Edge\";v=\"142\", \"Not_A Brand\";v=\"99\""],"Sec-Ch-Ua-Mobile":["?0"],"Sec-Ch-Ua-Platform":["\"Windows\""],"Sec-Fetch-Dest":["document"],"Sec-Fetch-Mode":["navigate"],"Sec-Fetch-Site":["none"],"Sec-Fetch-User":["?1"],"Upgrade-Insecure-Requests":["1"],"User-Agent":["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"]},"request_body":{},"response_body":{"error":"Missing X-API-Key"},"duration":76,"time":"2025-11-09T14:32:28Z","message":"HTTP request logs------"}
-{"level":"warn","trace_id":"49288eb2-6705-43e5-84be-81abf174841a","method":"GET","path":"/","query":"","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0","referer":"","protocol":"HTTP/1.1","host":"localhost:8081","remote_address":"127.0.0.1:63740","request_uri":"/","content_length":0,"status_code":400,"time":"2025-11-09T14:32:28+07:00","header":{"Accept":["text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"],"Accept-Encoding":["gzip, deflate, br, zstd"],"Accept-Language":["vi,en-US;q=0.9,en-GB;q=0.8,en;q=0.7"],"Connection":["keep-alive"],"Sec-Ch-Ua":["\"Chromium\";v=\"142\", \"Microsoft Edge\";v=\"142\", \"Not_A Brand\";v=\"99\""],"Sec-Ch-Ua-Mobile":["?0"],"Sec-Ch-Ua-Platform":["\"Windows\""],"Sec-Fetch-Dest":["document"],"Sec-Fetch-Mode":["navigate"],"Sec-Fetch-Site":["none"],"Sec-Fetch-User":["?1"],"Upgrade-Insecure-Requests":["1"],"User-Agent":["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"]},"request_body":{},"response_body":{"error":"Missing X-API-Key"},"duration":38,"time":"2025-11-09T14:32:28Z","message":"HTTP request logs------"}
-{"level":"warn","trace_id":"001bb590-2198-4a5c-b128-f55bb344038f","method":"GET","path":"/favicon.ico","query":"","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0","referer":"http://localhost:8081/","protocol":"HTTP/1.1","host":"localhost:8081","remote_address":"127.0.0.1:63740","request_uri":"/favicon.ico","content_length":0,"status_code":400,"time":"2025-11-09T14:32:29+07:00","header":{"Accept":["image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"],"Accept-Encoding":["gzip, deflate, br, zstd"],"Accept-Language":["vi,en-US;q=0.9,en-GB;q=0.8,en;q=0.7"],"Connection":["keep-alive"],"Referer":["http://localhost:8081/"],"Sec-Ch-Ua":["\"Chromium\";v=\"142\", \"Microsoft Edge\";v=\"142\", \"Not_A Brand\";v=\"99\""],"Sec-Ch-Ua-Mobile":["?0"],"Sec-Ch-Ua-Platform":["\"Windows\""],"Sec-Fetch-Dest":["image"],"Sec-Fetch-Mode":["no-cors"],"Sec-Fetch-Site":["same-origin"],"User-Agent":["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"]},"request_body":{},"response_body":{"error":"Missing X-API-Key"},"duration":20,"time":"2025-11-09T14:32:29Z","message":"HTTP request logs------"}
-{"level":"warn","trace_id":"b5a3de33-762f-41e2-a233-2f2fa8be01f1","method":"GET","path":"/favicon.ico","query":"","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0","referer":"http://localhost:8081/","protocol":"HTTP/1.1","host":"localhost:8081","remote_address":"127.0.0.1:63740","request_uri":"/favicon.ico","content_length":0,"status_code":400,"time":"2025-11-09T14:32:29+07:00","header":{"Accept":["image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"],"Accept-Encoding":["gzip, deflate, br, zstd"],"Accept-Language":["vi,en-US;q=0.9,en-GB;q=0.8,en;q=0.7"],"Connection":["keep-alive"],"Referer":["http://localhost:8081/"],"Sec-Ch-Ua":["\"Chromium\";v=\"142\", \"Microsoft Edge\";v=\"142\", \"Not_A Brand\";v=\"99\""],"Sec-Ch-Ua-Mobile":["?0"],"Sec-Ch-Ua-Platform":["\"Windows\""],"Sec-Fetch-Dest":["image"],"Sec-Fetch-Mode":["no-cors"],"Sec-Fetch-Site":["same-origin"],"User-Agent":["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"]},"request_body":{},"response_body":{"error":"Missing X-API-Key"},"duration":24,"time":"2025-11-09T14:32:29Z","message":"HTTP request logs------"}
-{"level":"warn","time":"2025-11-09T14:40:51Z","message":"Shutting down server..."}
-{"level":"warn","time":"2025-11-09T14:40:51Z","message":"Server exited gracefully..."}
-{"level":"info","time":"2025-11-09T14:40:56Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-09T14:40:56Z","message":"Server is running at :8081"}
-{"level":"info","trace_id":"e873be0e-8671-4400-85a1-32550ffbc4ec","method":"POST","path":"/api/v1/auth","query":"","ip":"127.0.0.1","user_agent":"PostmanRuntime/7.50.0","referer":"","protocol":"HTTP/1.1","host":"localhost:8081","remote_address":"127.0.0.1:50355","request_uri":"/api/v1/auth","content_length":63,"status_code":200,"time":"2025-11-09T14:41:01+07:00","header":{"Accept":["*/*"],"Accept-Encoding":["gzip, deflate, br"],"Connection":["keep-alive"],"Content-Length":["63"],"Content-Type":["application/json"],"Postman-Token":["c1da2ee7-86c1-46f8-99f9-0db780208ce8"],"User-Agent":["PostmanRuntime/7.50.0"],"X-Api-Key":["45ad431d-263e-4827-8255-372e08dd7985"]},"request_body":{"email":"dat198hp@gmail.vn","password":"123456a@A"},"response_body":"\u001f\ufffd\b\u0000\u0000\u0000\u0000\u0000\u0000\ufffd<\ufffdMs\ufffd0\u0000@\ufffd\ufffdNζc@\ufffd\ufffd\ufffd\u001eZ\f\u0018\u000bX1(\ufffd\ufffd`\ufffd$\ufffd\ufffd\u001a\u001c>:\ufffd\ufffd;\ufffd\ufffd\ufffd\ufffd\ufffdn\ufffd}\u0001\ufffde\ufffdC\ufffd\u0015\ufffd\u000fƸ\ufffd`\u0006*\ufffdu\ufffds\ufffd\u0002~\ufffd\ufffd\ufffd\ufffd?s{\ufffd`\u0006\ufffdY\ufffd\ufffd\ufffd\u0017\ufffd\ufffd\ufffds\ufffd(^\ufffd\u0015\ufffd\ufffdV\\<&wr\ufffd\ufffd\t\ufffdPb\ufffd\ufffd\ufffdb\u000e^b\ufffd&Ggk?\ufffdq\ufffdh\u0012\t\\42\ufffd\ufffd]\ufffd\ufffd\ufffd\ufffdZ\ufffd'%\t\ufffd\ufffd\u001e\ufffd4aIt;yv\ufffdK\ufffdu<曆j\ufffd\ufffd\ufffdz\ufffd}k\u000f\nA\ufffd\b\ufffd\ufffd\ufffd:z\ufffd:\ufffd\ufffd\ufffdZ\ufffd>s\ufffd\ufffdс\ufffdLu\ufffd\ufffdBHj\ufffdw\ufffd\ufffd\u0011l\ufffd\ufffdC׊\ufffdQ\u0019\u001e݀\u0019V\ufffdۄ:\ufffd\u0004\t\f\ufffd\ufffdOi\ufffd\ufffd6I\ufffd\ufffd\ufffd{psؔ\ufffdJ\\o\ufffd\ufffd\ufffd\ufffd\ufffdOql\r\u0017C\ufffd\ufffdZ\ufffdT\ufffd\ufffd\ufffdr\ufffd\ufffdؤu\u001a\ufffd\ufffd\n\ufffd\ufffd\ufffd\ufffd\ufffd\ufffdc^\u0004\ufffd\ufffde\ufffd\ufffd\u001e\u0017\ufffd\u0010Nt\f\ufffd\ufffd> t\ufffd\ufffdmK\ufffd\ufffd\ufffd\u0015\ufffd\f\u000bl\ufffd\ufffd\u001a\ufffd\u0002i\\\ufffd\u0013\u001b\ufffd\u0012W]s1P\ufffdyv\ufffd\ufffd\u0006\ufffd\u001c8gU\ufffd\ufffd\u001cX_\ufffdA\\*&}g\ufffdy\ufffdԟ\ufffde8\ufffd\ufffd\u001a\u0001\ufffd\u0012\ufffd\ufffd\ufffd\ufffdO\ufffd\ufffd\ufffd\ufffd\ufffd\u0004/\u0002gn\u0005S\u000e\ufffd5\u001e\u0002\ufffd/\ufffd\ufffd\ufffd\ufffd\ufffdsF\ufffd5}>\ufffd\ufffdC\ufffdD\ufffd\u0017\ufffd֣\ufffd\ufffd\"\ufffd3\ufffd\ufffd\ufffdS\ufffd\u001e\u0018l3K\u001e\u0019\ufffd\ufffd;\ufffdݹ\u0016\ufffdϾ\ufffd\ufffdû\u001b\ufffd\ufffdgk.?Rڌ\u001b\u001f\ufffd\ufffd/\u001f\ufffd\ufffd\ufffdi\ufffd\ufffdB\ufffdy\u000f\ufffd\n\u0014\ufffd\u0005f\ufffd\u000f\ufffd\ufffds}\ufffd5X\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\u0000\u0000\u0000\ufffd\ufffd\ufffdk\ufffd\ufffdc\u0002\u0000\u0000","duration":70611,"time":"2025-11-09T14:41:01Z","message":"HTTP request logs------"}
-{"level":"warn","time":"2025-11-09T14:51:06Z","message":"Shutting down server..."}
-{"level":"warn","time":"2025-11-09T14:51:06Z","message":"Server exited gracefully..."}
-{"level":"info","time":"2025-11-09T14:52:37Z","message":"Loaded .env file"}
-{"level":"error","error":"failed to connect to `user=root database=shopping-cart`:\n\t127.0.0.1:5432 (localhost): dial error: dial tcp 127.0.0.1:5432: connect: connection refused\n\t[::1]:5432 (localhost): dial error: dial tcp [::1]:5432: connect: connection refused","time":"2025-11-09T14:52:37Z","message":"unable to ping database: failed to connect to `user=root database=shopping-cart`:\n\t127.0.0.1:5432 (localhost): dial error: dial tcp 127.0.0.1:5432: connect: connection refused\n\t[::1]:5432 (localhost): dial error: dial tcp [::1]:5432: connect: connection refused"}
-{"level":"info","time":"2025-11-09T14:52:51Z","message":"Loaded .env file"}
-{"level":"error","error":"failed to connect to `user=root database=shopping-cart`:\n\t127.0.0.1:5432 (localhost): dial error: dial tcp 127.0.0.1:5432: connect: connection refused\n\t[::1]:5432 (localhost): dial error: dial tcp [::1]:5432: connect: connection refused","time":"2025-11-09T14:52:51Z","message":"unable to ping database: failed to connect to `user=root database=shopping-cart`:\n\t127.0.0.1:5432 (localhost): dial error: dial tcp 127.0.0.1:5432: connect: connection refused\n\t[::1]:5432 (localhost): dial error: dial tcp [::1]:5432: connect: connection refused"}
-{"level":"info","time":"2025-11-13T04:25:21Z","message":"Loaded .env file"}
-{"level":"error","error":"context deadline exceeded","time":"2025-11-13T04:25:26Z","message":"unable to ping database: context deadline exceeded"}
-{"level":"info","time":"2025-11-13T04:47:27Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T04:47:27Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T05:55:07Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T05:55:07Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T05:55:45Z","message":"http://fontend.domain/reset-password?token=_NOBwkhKH7h-BtQ8lPSUaQ=="}
-{"level":"info","time":"2025-11-13T05:57:45Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T05:57:45Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T05:57:56Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T05:57:56Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T05:57:58Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T05:57:58Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T05:59:23Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T05:59:23Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T05:59:38Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T05:59:38Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T05:59:53Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T05:59:53Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:00:27Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:00:27Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:00:45Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:00:45Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:01:01Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:01:01Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:01:37Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:01:37Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:02:34Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:02:34Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:03:06Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:03:06Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:03:40Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:03:40Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:03:55Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:03:55Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:03:42Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:03:42Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:04:01Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:04:01Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:05:24Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:05:24Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:05:46Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:05:46Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:06:08Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:06:08Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:07:19Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:07:19Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:10:44Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:10:44Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:12:07Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:12:07Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:12:17Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:12:17Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:13:23Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:13:23Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:13:44Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:13:44Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:19:09Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:19:09Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:21:29Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:21:29Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:22:57Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:22:57Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:23:40Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:23:40Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:24:46Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:24:46Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:25:38Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:25:38Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:27:04Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:27:04Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:27:20Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:27:20Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:27:52Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:27:52Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:28:41Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:28:41Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:29:03Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:29:03Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:29:37Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:29:37Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:29:44Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:29:44Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:30:55Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:30:55Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:30:57Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:30:57Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:31:48Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:31:48Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:31:55Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:31:55Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:32:27Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:32:27Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:32:56Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:32:56Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:34:23Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:34:23Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:34:29Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:34:29Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:36:17Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:36:17Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:37:47Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:37:47Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:38:18Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:38:18Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:39:52Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:39:52Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:40:10Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:40:10Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:41:03Z","message":"http://fontend.domain/reset-password?token=WnF2YnoRpq__TQJrBU8DEA=="}
-{"level":"info","time":"2025-11-13T06:53:50Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:53:50Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:53:56Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:53:56Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:55:11Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:55:11Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T06:58:31Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T06:58:31Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T07:11:30Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T07:11:30Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T07:12:38Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T07:12:38Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T07:13:43Z","message":"http://fontend.domain/reset-password?token=QXdE9SpZ5AL3g7flCDOEkw=="}
-{"level":"info","time":"2025-11-13T07:15:03Z","message":"http://fontend.domain/reset-password?token=EZCUMCy9bTE_d2xwNbR5RA=="}
-{"level":"info","time":"2025-11-13T07:16:17Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T07:16:17Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T07:17:02Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T07:17:02Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T07:18:02Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T07:18:02Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T07:20:17Z","message":"http://fontend.domain/reset-password?token=1XUVj_gqSYe1zJyosuspYg=="}
-{"level":"info","time":"2025-11-13T08:02:56Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T08:02:56Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T08:06:08Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T08:06:08Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T08:09:12Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T08:09:12Z","message":"Server is running at :8081"}
-{"level":"info","time":"2025-11-13T08:19:40Z","message":"http://fontend.domain/reset-password?token=sw33AhQkCpQA5a3-agF-NA=="}
-{"level":"info","time":"2025-11-13T08:24:11Z","message":"Loaded .env file"}
-{"level":"info","time":"2025-11-13T08:24:11Z","message":"Server is running at :8081"}
+{"level":"info","time":"2025-11-21T08:29:01Z","message":"Loaded .env file"}
+{"level":"error","error":"failed to connect to `user=root database=shopping-cart`: 172.18.0.3:5432 (db): failed SASL auth: FATAL: password authentication failed for user \"root\" (SQLSTATE 28P01)","time":"2025-11-21T08:29:01Z","message":"unable to ping database: failed to connect to `user=root database=shopping-cart`: 172.18.0.3:5432 (db): failed SASL auth: FATAL: password authentication failed for user \"root\" (SQLSTATE 28P01)"}
+{"level":"info","time":"2025-11-21T08:32:14Z","message":"Loaded .env file"}
+{"level":"error","error":"failed to connect to `user=root database=shopping-cart`: 172.18.0.3:5432 (db): failed SASL auth: FATAL: password authentication failed for user \"root\" (SQLSTATE 28P01)","time":"2025-11-21T08:32:14Z","message":"unable to ping database: failed to connect to `user=root database=shopping-cart`: 172.18.0.3:5432 (db): failed SASL auth: FATAL: password authentication failed for user \"root\" (SQLSTATE 28P01)"}
+{"level":"info","time":"2025-11-21T08:34:06Z","message":"Loaded .env file"}
+{"level":"error","error":"failed to connect to `user=root database=shopping-cart`: 172.18.0.3:5432 (db): failed SASL auth: FATAL: password authentication failed for user \"root\" (SQLSTATE 28P01)","time":"2025-11-21T08:34:06Z","message":"unable to ping database: failed to connect to `user=root database=shopping-cart`: 172.18.0.3:5432 (db): failed SASL auth: FATAL: password authentication failed for user \"root\" (SQLSTATE 28P01)"}
+{"level":"info","time":"2025-11-21T08:34:15Z","message":"Loaded .env file"}
+{"level":"error","error":"failed to connect to `user=root database=shopping-cart`: 172.18.0.3:5432 (db): failed SASL auth: FATAL: password authentication failed for user \"root\" (SQLSTATE 28P01)","time":"2025-11-21T08:34:15Z","message":"unable to ping database: failed to connect to `user=root database=shopping-cart`: 172.18.0.3:5432 (db): failed SASL auth: FATAL: password authentication failed for user \"root\" (SQLSTATE 28P01)"}
+{"level":"info","time":"2025-11-21T08:37:48Z","message":"Loaded .env file"}
+{"level":"error","error":"failed to connect to `user=root database=shopping-cart`: 172.18.0.3:5432 (db): failed SASL auth: FATAL: password authentication failed for user \"root\" (SQLSTATE 28P01)","time":"2025-11-21T08:37:48Z","message":"unable to ping database: failed to connect to `user=root database=shopping-cart`: 172.18.0.3:5432 (db): failed SASL auth: FATAL: password authentication failed for user \"root\" (SQLSTATE 28P01)"}
+{"level":"info","time":"2025-11-21T08:41:14Z","message":"Loaded .env file"}
+{"level":"error","error":"failed to connect to `user=root database=shopping-cart`: 172.18.0.2:5432 (db): server error: FATAL: the database system is starting up (SQLSTATE 57P03)","time":"2025-11-21T08:41:14Z","message":"unable to ping database: failed to connect to `user=root database=shopping-cart`: 172.18.0.2:5432 (db): server error: FATAL: the database system is starting up (SQLSTATE 57P03)"}
+{"level":"info","time":"2025-11-21T08:44:04Z","message":"Loaded .env file"}
+{"level":"error","error":"failed to connect to `user=root database=shopping-cart`: 172.18.0.2:5432 (db): failed SASL auth: FATAL: password authentication failed for user \"root\" (SQLSTATE 28P01)","time":"2025-11-21T08:44:04Z","message":"unable to ping database: failed to connect to `user=root database=shopping-cart`: 172.18.0.2:5432 (db): failed SASL auth: FATAL: password authentication failed for user \"root\" (SQLSTATE 28P01)"}
+{"level":"info","time":"2025-11-21T08:53:31Z","message":"Loaded .env file"}
+{"level":"error","error":"failed to connect to `user=root database=shopping-cart`: 172.18.0.2:5432 (db): failed SASL auth: FATAL: password authentication failed for user \"root\" (SQLSTATE 28P01)","time":"2025-11-21T08:53:31Z","message":"unable to ping database: failed to connect to `user=root database=shopping-cart`: 172.18.0.2:5432 (db): failed SASL auth: FATAL: password authentication failed for user \"root\" (SQLSTATE 28P01)"}
+{"level":"info","time":"2025-11-21T08:54:01Z","message":"Loaded .env file"}
+{"level":"error","error":"failed to connect to `user=root database=shopping-cart`: 172.18.0.2:5432 (db): failed SASL auth: FATAL: password authentication failed for user \"root\" (SQLSTATE 28P01)","time":"2025-11-21T08:54:01Z","message":"unable to ping database: failed to connect to `user=root database=shopping-cart`: 172.18.0.2:5432 (db): failed SASL auth: FATAL: password authentication failed for user \"root\" (SQLSTATE 28P01)"}
+{"level":"info","time":"2025-11-21T09:04:17Z","message":"Loaded .env file"}
+{"level":"info","time":"2025-11-21T09:04:17Z","message":"Server is running at :8081"}
+{"level":"info","time":"2025-11-21T09:06:21Z","message":"Loaded .env file"}
+{"level":"info","time":"2025-11-21T09:06:21Z","message":"Server is running at :8081"}
+{"level":"info","time":"2025-11-21T09:06:54Z","message":"Loaded .env file"}
+{"level":"info","time":"2025-11-21T09:06:54Z","message":"Server is running at :8081"}
+{"level":"info","time":"2025-11-21T09:08:14Z","message":"Loaded .env file"}
+{"level":"info","time":"2025-11-21T09:08:14Z","message":"Server is running at :8081"}
+{"level":"info","time":"2025-11-21T09:19:00Z","message":"Loaded .env file"}
+{"level":"info","time":"2025-11-21T09:19:00Z","message":"Server is running at :8081"}
+{"level":"info","time":"2025-11-21T09:21:13Z","message":"Loaded .env file"}
+{"level":"info","time":"2025-11-21T09:21:13Z","message":"Server is running at :8081"}
+{"level":"info","time":"2025-11-21T09:21:17Z","message":"Loaded .env file"}
+{"level":"info","time":"2025-11-21T09:21:17Z","message":"Server is running at :8081"}
+{"level":"info","time":"2025-11-21T09:21:20Z","message":"Loaded .env file"}
+{"level":"info","time":"2025-11-21T09:21:20Z","message":"Server is running at :8081"}
+{"level":"info","time":"2025-11-21T09:21:51Z","message":"Loaded .env file"}
+{"level":"info","time":"2025-11-21T09:21:51Z","message":"Server is running at :8081"}
+{"level":"info","time":"2025-11-21T09:22:48Z","message":"Loaded .env file"}
+{"level":"info","time":"2025-11-21T09:22:48Z","message":"Server is running at :8081"}
+{"level":"info","time":"2025-11-21T09:23:42Z","message":"Loaded .env file"}
+{"level":"info","time":"2025-11-21T09:23:42Z","message":"Server is running at :8081"}
+{"level":"info","time":"2025-11-21T09:23:48Z","message":"Loaded .env file"}
+{"level":"info","time":"2025-11-21T09:23:48Z","message":"Server is running at :8081"}
+{"level":"info","time":"2025-11-21T09:24:07Z","message":"Loaded .env file"}
+{"level":"info","time":"2025-11-21T09:24:07Z","message":"Server is running at :8081"}
+{"level":"info","time":"2025-11-21T09:27:18Z","message":"Loaded .env file"}
+{"level":"info","time":"2025-11-21T09:27:18Z","message":"Server is running at :8081"}

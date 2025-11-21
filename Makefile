@@ -3,19 +3,19 @@ export
 
 MIRGRATION_DIR = internal/db/migrations
 # MIRGRATION_DIR = .//nternal//db//migrations
-CONN_STRING = postgresql://${DB_USER}:${DB_PASS}@$(DB_HOST):$(DB_PORT)/${DB_NAME}?sslmode=${DB_SSLMODE}
+CONN_STRING = postgresql://${DB_USER}:${DB_PASSWORD}@$(DB_HOST):$(DB_PORT)/${DB_NAME}?sslmode=${DB_SSLMODE}
 PROD_COMPOSE=docker-compose.prod.yml
 NOAPP_COMPOSE=docker-compose.noapp.yml
 DEV_COMPOSE=docker-compose.dev.yml
 ENV_FILE=.env
 # Import and export databases
 importdb:
-	docker exec -i db psql -U root -d ${DB_NAME} < ./backup_data-db.sql
+	docker exec -i db psql -U ${DB_USER} -d ${DB_NAME} < ./backup_data-db.sql
 exportdb:
-	docker exec -i db pg_dump -U root -d ${DB_NAME} > ./backup_data-db.sql
+	docker exec -i db pg_dump -U ${DB_USER} -d ${DB_NAME} > ./backup_data-db.sql
 start_container:
 	docker compose up -d
-remove_container:
+remove_container:s
 	docker compose down
 # Run the Go server
 server:

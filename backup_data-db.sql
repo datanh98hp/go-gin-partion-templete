@@ -136,6 +136,7 @@ COPY public.schema_migrations (version, dirty) FROM stdin;
 --
 
 COPY public.users (user_id, user_uuid, user_email, user_fullname, user_password, user_age, user_status, user_level, user_deleted_at, user_created_at, user_updated_at) FROM stdin;
+1	9bf5ff54-fe59-4a93-9792-0d3de080421f	dat198hp@gmail.vn	Dat 04	$2a$10$UJ/U16MSw0MdxFENO0iQh.gAbIC2CyOdTw2pogwMH6KbQ2j13xOzy	27	1	2	\N	2025-11-21 09:22:17.367124+00	2025-11-21 09:22:17.367124+00
 \.
 
 
@@ -143,7 +144,7 @@ COPY public.users (user_id, user_uuid, user_email, user_fullname, user_password,
 -- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
 --
 
-SELECT pg_catalog.setval('public.users_user_id_seq', 1, false);
+SELECT pg_catalog.setval('public.users_user_id_seq', 1, true);
 
 
 --
