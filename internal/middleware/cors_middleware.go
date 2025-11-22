@@ -19,7 +19,7 @@ func CORSMiddleware() gin.HandlerFunc {
 		ctx.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		ctx.Writer.Header().Set("Access-Control-Max-Age", "86400")
 
-		log.Printf("CORSMiddleware : %v", ctx.Writer.Header())
+		//log.Printf("CORSMiddleware : %v", ctx.Writer.Header())
 		if ctx.Request.Method == "OPTIONS" {
 			ctx.AbortWithStatus(http.StatusNoContent)
 			return

@@ -47,7 +47,7 @@ func RegisterRoutes(r *gin.Engine, authService auth.TokenService, cacheService c
 		case *v1.AuthRoute:
 			route.Register(api_v1)
 		default:
-			route.Register(api_v1)
+			route.Register(protected)
 		}
 	}
 	// handle url not found

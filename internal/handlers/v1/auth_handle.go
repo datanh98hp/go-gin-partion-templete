@@ -1,6 +1,7 @@
 package handlers_v1
 
 import (
+	"log"
 	"net/http"
 	dto_v1 "user-management-api/internal/DTO/v1"
 	"user-management-api/internal/services"
@@ -85,7 +86,7 @@ func (ah *AuthHandler) RequestForgotPassword(ctx *gin.Context) {
 		return
 	}
 	if err := ah.service.RequestForgotPassword(ctx, input.Email); err != nil {
-		utils.NewError("", utils.ErrorCodeInternal)
+		utils.ResponseError(ctx, err)
 		return
 	}
 	utils.ResponseSuccess(ctx, http.StatusOK, "Reset link is sent to email !")
@@ -96,7 +97,9 @@ func (ah *AuthHandler) ResetPassword(ctx *gin.Context) {
 		utils.ResponseValidator(ctx, validations.HandleValidationErr(err))
 		return
 	}
+	log.Print("Reset password failed")
 	if err := ah.service.ResetPassword(ctx, input.Token, input.NewPassword); err != nil {
+
 		utils.ResponseError(ctx, err)
 		return
 	}

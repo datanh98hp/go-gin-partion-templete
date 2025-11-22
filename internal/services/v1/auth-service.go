@@ -12,6 +12,7 @@ import (
 	"user-management-api/pkg/auth"
 	"user-management-api/pkg/cache"
 	"user-management-api/pkg/logger"
+	"user-management-api/pkg/mail"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -25,6 +26,7 @@ type authService struct {
 	userRepo     repositories.UserRepo
 	tokenService auth.TokenService
 	cacheService cache.RedisCacheService
+	mailService  mail.EmailProviderService
 }
 type LoginAttempt struct {
 	Limiter  *rate.Limiter
@@ -38,11 +40,12 @@ var (
 	MaxLoginAttempt = 5               // max 5 attempts in the TTL
 )
 
-func NewAuthService(userRepo repositories.UserRepo, tokenService auth.TokenService, cache cache.RedisCacheService) services.AuthService {
+func NewAuthService(userRepo repositories.UserRepo, tokenService auth.TokenService, cache cache.RedisCacheService, mailService mail.EmailProviderService) services.AuthService {
 	return &authService{
 		userRepo:     userRepo,
 		tokenService: tokenService,
 		cacheService: cache,
+		mailService:  mailService,
 	}
 }
 
@@ -240,7 +243,19 @@ func (as *authService) RequestForgotPassword(ctx *gin.Context, email string) err
 
 	resetLink := fmt.Sprintf("http://fontend.domain/reset-password?token=%s", str)
 	logger.Log.Info().Msg(resetLink)
-	/// write cache
+	mailContent := &mail.Email{
+		To: []mail.Address{
+			{Email: email},
+		},
+		Subject: "Password Reset Request",
+		Text: fmt.Sprintf("Hi %s, \n\n You requested to reset your password. Please click the link below to reset it:\n%s\n\n The link will expire in 1 hour. \n\n Best regard, \nCode With DatDev Team",
+			user.UserEmail,
+			resetLink),
+	}
+	///
+	if err := as.mailService.SendMail(context, mailContent); err != nil {
+		return utils.NewWrapError("Failed to send mail", utils.ErrorCodeInternal, err)
+	}
 
 	return nil
 }
