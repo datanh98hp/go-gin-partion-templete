@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"strings"
 	"time"
+	"user-management-api/internal/utils"
 	"user-management-api/pkg/logger"
 
 	"github.com/gin-gonic/gin"
@@ -34,6 +35,9 @@ func LoggerMiddleware(httpLogger *zerolog.Logger) gin.HandlerFunc {
 		contentType := c.GetHeader("Content-Type")
 		requestBody := make(map[string]any) // define request body map
 		var formFiles []map[string]any
+
+		var sensitiveField = []string{"password", "pass", "new_password", "token"}
+
 		//check content type
 		if strings.HasPrefix(contentType, "multipart/form-data") {
 			// check form data size max = 32MB
@@ -148,7 +152,7 @@ func LoggerMiddleware(httpLogger *zerolog.Logger) gin.HandlerFunc {
 			Int("status_code", statusCode).
 			Str("time", time.Now().Format("2006-01-02T15:04:05+07:00")).
 			Interface("header", c.Request.Header).
-			Interface("request_body", requestBody).
+			Interface("request_body", utils.SenitizeRequestBody(requestBody, sensitiveField)).
 			Interface("response_body", responseBodyParsed).
 			Int64("duration", duration.Microseconds()).
 			Msg("HTTP request logs------")

@@ -13,6 +13,7 @@ import (
 	"user-management-api/pkg/cache"
 	"user-management-api/pkg/logger"
 	"user-management-api/pkg/mail"
+	"user-management-api/pkg/rabbitmq"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -27,6 +28,7 @@ type authService struct {
 	tokenService auth.TokenService
 	cacheService cache.RedisCacheService
 	mailService  mail.EmailProviderService
+	rabbitMq     rabbitmq.RabbitMQService
 }
 type LoginAttempt struct {
 	Limiter  *rate.Limiter
@@ -40,12 +42,13 @@ var (
 	MaxLoginAttempt = 5               // max 5 attempts in the TTL
 )
 
-func NewAuthService(userRepo repositories.UserRepo, tokenService auth.TokenService, cache cache.RedisCacheService, mailService mail.EmailProviderService) services.AuthService {
+func NewAuthService(userRepo repositories.UserRepo, tokenService auth.TokenService, cache cache.RedisCacheService, mailService mail.EmailProviderService, rabbitmqService rabbitmq.RabbitMQService) services.AuthService {
 	return &authService{
 		userRepo:     userRepo,
 		tokenService: tokenService,
 		cacheService: cache,
 		mailService:  mailService,
+		rabbitMq:     rabbitmqService,
 	}
 }
 
@@ -252,9 +255,14 @@ func (as *authService) RequestForgotPassword(ctx *gin.Context, email string) err
 			user.UserEmail,
 			resetLink),
 	}
-	///
-	if err := as.mailService.SendMail(context, mailContent); err != nil {
-		return utils.NewWrapError("Failed to send mail", utils.ErrorCodeInternal, err)
+	/// publish into rabbitmq
+
+	// if err := as.mailService.SendMail(context, mailContent); err != nil {
+	// 	return utils.NewWrapError("Failed to send mail", utils.ErrorCodeInternal, err)
+	// }
+
+	if err := as.rabbitMq.Publish(context, "auth_mail_queue", mailContent); err != nil {
+		return utils.NewError("Failed to send mail", utils.ErrorCodeInternal)
 	}
 
 	return nil

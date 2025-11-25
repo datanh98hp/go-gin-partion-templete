@@ -1,19 +1,18 @@
 package middleware
 
 import (
-	"log"
 	"net/http"
+	"user-management-api/internal/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
 func CORSMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		origin := ctx.Request.Header.Get("Origin")
-		log.Printf("Origin : %s", origin)
 
+		fontEndURL := utils.GetEnv("FRONT_END_URL", "http://127.0.0.1:5500")
 		// Allow the specific origin
-		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "http://127.0.0.1:5500")
+		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "http://127.0.0.1:5500,"+fontEndURL)
 		ctx.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-API-Key, Authorization")
 		ctx.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
 		ctx.Writer.Header().Set("Access-Control-Allow-Credentials", "true")

@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"os"
 	"path/filepath"
 	"user-management-api/internal/app"
 	"user-management-api/internal/config"
@@ -12,26 +11,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func mushGetWorkingDir() string {
-	cwd, err := os.Getwd()
-	if err != nil {
-		log.Fatal("Unable get get work dir : ", err)
-	}
-	return cwd
-}
-func loadEnv(path string) {
-
-	err := godotenv.Load(path)
-	if err != nil {
-		log.Printf("Error loading .env file")
-		logger.Log.Warn().Msg("Error loading .env file")
-	} else {
-		log.Printf("Loaded .env file")
-		logger.Log.Info().Msg("Loaded .env file")
-	}
-}
 func main() {
-	rootDir := mushGetWorkingDir()
+	rootDir := utils.MushGetWorkingDir()
 	logFile := filepath.Join(rootDir, "internal/logs/app.log")
 	logger.InitLogger(logger.LoggerConfig{
 		Level:     "info",
@@ -43,19 +24,29 @@ func main() {
 		IsDev:     utils.GetEnv("APP_ENV", "development"),
 	})
 	//Load .env file
-	loadEnv(filepath.Join(rootDir, ".env"))
-	// Run the application
+	err := godotenv.Load(filepath.Join(rootDir, ".env"))
+	if err != nil {
+		log.Printf("Error loading .env file")
+		logger.Log.Warn().Msg("Error loading .env file in api server")
+	} else {
+		log.Printf("Loaded .env file")
+		logger.Log.Info().Msg("Loaded .env file in api server")
+	}
 
 	//initialize the config
 	cfg := config.NewConfig()
 	//initialize theapplicationn
-	application := app.NewApplication(cfg)
+	application, err := app.NewApplication(cfg)
+	if err != nil {
+		// panic(err)
+		logger.Log.Fatal().Err(err).Msgf("Failed to create application: %s", err.Error())
+	}
 
 	//start server
+	// Run the application
 	if err := application.Run(); err != nil {
 		// panic(err)
-		logger.Log.Fatal().Err(err).Msgf("Error: %s", err.Error())
-		log.Fatal(err)
+		logger.Log.Fatal().Err(err).Msgf("Application failed to run: %s", err.Error())
 	}
 
 }

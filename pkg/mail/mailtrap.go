@@ -50,6 +50,7 @@ func (p *MailtrapProvider) SendMail(ctx context.Context, email *Email) error {
 	traceID := logger.GetTraceId(ctx)
 	start := time.Now()
 
+	//sleep
 	time.Sleep(5 * time.Second)
 
 	email.From = Address{

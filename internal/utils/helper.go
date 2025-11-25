@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"user-management-api/pkg/logger"
 
 	"github.com/rs/zerolog"
@@ -56,4 +57,47 @@ func GenerateRandomeString(length int) (string, error) {
 		return "", err
 	}
 	return base64.URLEncoding.EncodeToString(bytes), nil
+}
+func SenitizeRequestBody(data map[string]any, sensitiveKeys []string) map[string]any {
+	senitive := make(map[string]any)
+	for key, value := range data {
+		lowerKey := strings.ToLower(key)
+		shoudMask := false
+		for _, s := range sensitiveKeys {
+			if lowerKey == s {
+				shoudMask = true
+				break
+			}
+		}
+		if shoudMask {
+			senitive[key] = "*****"
+		} else {
+			switch v := value.(type) {
+			case map[string]any:
+				senitive[key] = SenitizeRequestBody(v, sensitiveKeys)
+			case []any:
+				var sentitizeSlice []any
+				for _, item := range v {
+					if m, ok := item.(map[string]any); ok {
+						sentitizeSlice = append(sentitizeSlice, SenitizeRequestBody(m, sensitiveKeys))
+					} else {
+						sentitizeSlice = append(sentitizeSlice, item)
+					}
+				}
+				senitive[key] = sentitizeSlice
+			default:
+				senitive[key] = value
+			}
+
+		}
+	}
+	return senitive
+}
+
+func MushGetWorkingDir() string {
+	cwd, err := os.Getwd()
+	if err != nil {
+		log.Fatal("Unable get get work dir : ", err)
+	}
+	return cwd
 }

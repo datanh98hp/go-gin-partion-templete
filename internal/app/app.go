@@ -18,6 +18,7 @@ import (
 	"user-management-api/pkg/cache"
 	"user-management-api/pkg/logger"
 	"user-management-api/pkg/mail"
+	"user-management-api/pkg/rabbitmq"
 
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
@@ -36,12 +37,13 @@ type Application struct {
 	Modules []Module
 }
 
-func NewApplication(cfg *config.Config) *Application {
+func NewApplication(cfg *config.Config) (*Application, error) {
 
 	//Call validator
 	if err := validations.InitValidator(); err != nil {
 		log.Fatalf("Error initializing validator: %v", err)
 		logger.Log.Fatal().Err(err).Msg("Error initializing validator" + err.Error())
+		return nil, err
 	}
 
 	// Customize Recovery middleware to handle panic and return JSON response
@@ -52,6 +54,7 @@ func NewApplication(cfg *config.Config) *Application {
 	if err := db.InitializeDatabase(); err != nil { //db.InitializeDatabase()
 		log.Fatalf("Error initializing database: %v", err)
 		logger.Log.Fatal().Err(err).Msg("Error initializing database" + err.Error())
+		return nil, err
 	}
 	//Redis
 
@@ -62,13 +65,22 @@ func NewApplication(cfg *config.Config) *Application {
 	factory, err := mail.NewProviderFactory(mail.ProviderMailtrap)
 	if err != nil {
 		mailLogger.Error().Err(err).Msg("Failed to create mail provider factory")
-		return nil
+		return nil, err
 	}
 
 	mailService, err := mail.NewMailService(cfg, mailLogger, factory)
 	if err != nil {
 		mailLogger.Error().Err(err).Msg("Failed to initialize mail service")
-		return nil
+		return nil, err
+	}
+	rabbitmqLogger := utils.NewLoggerWithPath("worker.log", "info")
+	rabbitMqService, err := rabbitmq.NewRabbitMQService(
+		utils.GetEnv("RABBITMQ_URL", "amqp://guest:guest@rabbitmq:5672/"),
+		rabbitmqLogger,
+	)
+	if err != nil {
+		rabbitmqLogger.Error().Err(err).Msg("Failed to initialize RabbitMQ service at main application")
+		return nil, err
 	}
 	// create modules context
 	ctx := ModulesContext{
@@ -79,7 +91,7 @@ func NewApplication(cfg *config.Config) *Application {
 	modules := []Module{
 		/// add modules
 		NewUserModule(ctx),
-		NewAuthModule(ctx, tokenService, cacheRedisService, mailService),
+		NewAuthModule(ctx, tokenService, cacheRedisService, mailService, rabbitMqService),
 	}
 	routes.RegisterRoutes(r, tokenService, cacheRedisService, getModuleRoutes(modules)...) // Register the routes
 
@@ -87,7 +99,7 @@ func NewApplication(cfg *config.Config) *Application {
 		Config:  cfg,
 		Router:  r,
 		Modules: modules,
-	}
+	}, nil
 
 }
 

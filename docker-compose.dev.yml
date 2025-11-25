@@ -41,11 +41,24 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-
+  rabbitmq:
+    image: rabbitmq:4.1.3-management-alpine
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
   api:
     build:
       context: .
-      dockerfile: ./Dockerfile.dev
+      dockerfile: ./Dockerfile.api.dev
     container_name: go-api
     restart: unless-stopped  # tự reset nếu gặp lỗi, trừ khi bị dừng thủ công
     # Publish host port (default to 8080) to container port 8080.
@@ -63,9 +76,73 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+  worker:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.worker.dev
+    container_name: go-worker
+    restart: unless-stopped  # tự reset nếu gặp lỗi, trừ khi bị dừng thủ công
+    # Publish host port (default to 8080) to container port 8080.
+    # Use ${SERVER_PORT:-8080} so compose still works if SERVER_PORT is missing.
+    # ports:
+    #   - "${SERVER_PORT}:${SERVER_PORT}"
+    env_file:
+      - .env
+    volumes:
+      - ./:/app
+    networks:
+      - app-network
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+
+  grafana:
+    image: grafana/grafana:11.0.0
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - loki
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: loki
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - loki-data:/loki
+    
+  promtail:
+    image: grafana/promtail:2.9.0
+    container_name: promtail
+    restart: unless-stopped
+    volumes:
+      - ./internal/logs:/var/log
+      - ./systems/promtail/promtail-config.yml:/etc/promtail/config.yml
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+
 volumes:
   pg_data:
   redis-data:
+  grafana-data:
+  loki-data:
 
 networks:
   app-network:
