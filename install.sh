@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e  # Exit on error
+# Error handling is managed by the trap handler below
 
 echo "=================================="
 echo "Go Gin Project Installation Script"
@@ -39,6 +39,18 @@ GO_VERSION="1.25.4" # golang version
 SQLC_VERSION="1.25.0" # sqlc version
 MIGRATE_VERSION="4.17.0" # golang-migrate version
 
+# Track what was installed during this run
+INSTALLED_MAKE=false
+INSTALLED_GO=false
+INSTALLED_SQLC=false
+INSTALLED_MIGRATE=false
+INSTALLED_DOCKER=false
+INSTALLED_DOCKER_COMPOSE=false
+INSTALLED_AIR=false
+
+# Track errors
+INSTALLATION_FAILED=false
+
 # Check if running as root
 if [ "$EUID" -eq 0 ]; then 
     print_error "Please do not run this script as root"
@@ -49,6 +61,170 @@ fi
 command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
+
+# Function to validate sudo access (caches credentials)
+validate_sudo() {
+    # Check if any operation will need sudo
+    local needs_sudo=false
+    
+    if [ "$INSTALLED_DOCKER_COMPOSE" = true ] && [ -f "/usr/local/bin/docker-compose" ]; then
+        needs_sudo=true
+    fi
+    if [ "$INSTALLED_DOCKER" = true ]; then
+        needs_sudo=true
+    fi
+    if [ "$INSTALLED_MIGRATE" = true ] && [ -f "/usr/local/bin/migrate" ]; then
+        needs_sudo=true
+    fi
+    if [ "$INSTALLED_GO" = true ] && [ -d "/usr/local/go" ]; then
+        needs_sudo=true
+    fi
+    
+    if [ "$needs_sudo" = true ]; then
+        print_info "Some operations require sudo access. Please enter your password once:"
+        sudo -v || {
+            print_error "Failed to obtain sudo access"
+            return 1
+        }
+        # Keep sudo alive in background
+        while true; do sudo -n true; sleep 50; kill -0 "$$" || exit; done 2>/dev/null &
+        SUDO_KEEPALIVE_PID=$!
+    fi
+}
+
+# ================================
+# Uninstall all installed dependencies
+# ================================
+uninstall_all() {
+    echo ""
+    echo "=================================="
+    echo "Rolling Back Installations"
+    echo "=================================="
+    echo ""
+    
+    # Validate sudo access once at the beginning
+    validate_sudo
+    
+    print_info "Cleaning up installed dependencies..."
+    
+    # Uninstall Air
+    if [ "$INSTALLED_AIR" = true ]; then
+        print_info "Removing Air..."
+        if [ -f "$HOME/go/bin/air" ]; then
+            rm -f "$HOME/go/bin/air"
+            print_success "Air removed"
+        fi
+    fi
+    
+    # Uninstall Docker Compose
+    if [ "$INSTALLED_DOCKER_COMPOSE" = true ]; then
+        print_info "Removing Docker Compose..."
+        if [ -f "/usr/local/bin/docker-compose" ]; then
+            sudo rm -f /usr/local/bin/docker-compose
+            print_success "Docker Compose removed"
+        fi
+    fi
+    
+    # Uninstall Docker
+    if [ "$INSTALLED_DOCKER" = true ]; then
+        print_info "Removing Docker..."
+        case "$OS" in
+            Linux*)
+                if command_exists apt-get; then
+                    sudo apt-get purge -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+                    sudo rm -rf /var/lib/docker
+                    sudo rm -rf /var/lib/containerd
+                elif command_exists yum || command_exists dnf; then
+                    sudo yum remove -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+                    sudo rm -rf /var/lib/docker
+                    sudo rm -rf /var/lib/containerd
+                fi
+                # Remove user from docker group
+                sudo gpasswd -d $USER docker 2>/dev/null || true
+                print_success "Docker removed"
+                ;;
+        esac
+    fi
+    
+    # Uninstall golang-migrate
+    if [ "$INSTALLED_MIGRATE" = true ]; then
+        print_info "Removing golang-migrate..."
+        if [ -f "/usr/local/bin/migrate" ]; then
+            sudo rm -f /usr/local/bin/migrate
+            print_success "golang-migrate removed"
+        fi
+    fi
+    
+    # Uninstall sqlc
+    if [ "$INSTALLED_SQLC" = true ]; then
+        print_info "Removing sqlc..."
+        if [ -f "$HOME/go/bin/sqlc" ]; then
+            rm -f "$HOME/go/bin/sqlc"
+            print_success "sqlc removed"
+        fi
+    fi
+    
+    # Uninstall Go
+    if [ "$INSTALLED_GO" = true ]; then
+        print_info "Removing Go..."
+        sudo rm -rf /usr/local/go
+        
+        # Remove Go environment variables from shell config
+        SHELL_CONFIG=""
+        if [ -n "$BASH_VERSION" ]; then
+            SHELL_CONFIG="$HOME/.bashrc"
+        elif [ -n "$ZSH_VERSION" ]; then
+            SHELL_CONFIG="$HOME/.zshrc"
+        else
+            SHELL_CONFIG="$HOME/.profile"
+        fi
+        
+        if [ -f "$SHELL_CONFIG" ]; then
+            # Remove Go environment lines
+            sed -i.bak '/# Go environment/d' "$SHELL_CONFIG" 2>/dev/null || true
+            sed -i.bak '/export PATH=\$PATH:\/usr\/local\/go\/bin/d' "$SHELL_CONFIG" 2>/dev/null || true
+            sed -i.bak '/export GOPATH=\$HOME\/go/d' "$SHELL_CONFIG" 2>/dev/null || true
+            sed -i.bak '/export PATH=\$PATH:\$GOPATH\/bin/d' "$SHELL_CONFIG" 2>/dev/null || true
+            rm -f "$SHELL_CONFIG.bak"
+        fi
+        
+        print_success "Go removed"
+    fi
+    
+    # Clean up temporary files
+    rm -f go*.tar.gz migrate.tar.gz get-docker.sh 2>/dev/null || true
+    
+    # Kill sudo keepalive process if it exists
+    if [ -n "${SUDO_KEEPALIVE_PID:-}" ]; then
+        kill "$SUDO_KEEPALIVE_PID" 2>/dev/null || true
+    fi
+    
+    echo ""
+    print_success "Rollback completed. All installed dependencies have been removed."
+    echo ""
+}
+
+# Error handler
+handle_error() {
+    local exit_code=$?
+    if [ $exit_code -ne 0 ]; then
+        print_error "Installation failed with exit code $exit_code"
+        INSTALLATION_FAILED=true
+        
+        echo ""
+        read -p "Do you want to rollback and uninstall all dependencies installed during this run? (y/N): " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            uninstall_all
+        else
+            print_info "Keeping partial installation. You can manually run './install.sh uninstall' to clean up later."
+        fi
+        exit $exit_code
+    fi
+}
+
+# Set up error trap
+trap 'handle_error' ERR
 
 # ================================
 # Install Make
@@ -74,10 +250,12 @@ install_make() {
                     print_error "Unable to install make. Please install manually."
                     return 1
                 fi
+                INSTALLED_MAKE=true
                 ;;
             Darwin*)
                 if command_exists brew; then
                     brew install make
+                    INSTALLED_MAKE=true
                 else
                     print_error "Homebrew not found. Please install Homebrew first."
                     return 1
@@ -189,6 +367,8 @@ install_golang() {
     export GOPATH=$HOME/go
     export PATH=$PATH:$GOPATH/bin
     
+    INSTALLED_GO=true
+    
     print_success "Go $GO_VERSION installed successfully"
     go version
 }
@@ -208,6 +388,7 @@ install_sqlc() {
     # Install via Go
     if command_exists go; then
         go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+        INSTALLED_SQLC=true
         print_success "sqlc installed successfully"
         sqlc version
     else
@@ -257,11 +438,13 @@ install_migrate() {
             sudo mv migrate /usr/local/bin/migrate
             sudo chmod +x /usr/local/bin/migrate
             rm migrate.tar.gz
+            INSTALLED_MIGRATE=true
             ;;
             
         Darwin*)
             if command_exists brew; then
                 brew install golang-migrate
+                INSTALLED_MIGRATE=true
             else
                 print_error "Homebrew not found. Please install Homebrew first."
                 return 1
@@ -296,6 +479,7 @@ install_docker() {
                     curl -fsSL https://get.docker.com -o get-docker.sh
                     sudo sh get-docker.sh
                     rm get-docker.sh
+                    INSTALLED_DOCKER=true
                     
                     # Add user to docker group
                     sudo usermod -aG docker $USER
@@ -329,6 +513,7 @@ install_docker_compose() {
                     DOCKER_COMPOSE_VERSION="2.23.3"
                     sudo curl -L "https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
                     sudo chmod +x /usr/local/bin/docker-compose
+                    INSTALLED_DOCKER_COMPOSE=true
                     print_success "Docker Compose installed successfully"
                     ;;
                 Darwin*)
@@ -352,7 +537,8 @@ install_air() {
     else
         print_info "Installing Air for hot reload..."
         if command_exists go; then
-            go install github.com/cosmtrek/air@latest
+            go install github.com/air-verse/air@latest
+            INSTALLED_AIR=true
             print_success "Air installed successfully"
         else
             print_error "Go is required to install Air"
@@ -454,7 +640,15 @@ verify_installations() {
 # ================================
 # Main installation flow
 # ================================
-main() {
+main_install() {
+    # Validate sudo access early (will prompt only if needed)
+    print_info "Checking system requirements..."
+    sudo -v 2>/dev/null && {
+        # Keep sudo alive in background if we got it
+        while true; do sudo -n true; sleep 50; kill -0 "$$" || exit; done 2>/dev/null &
+        SUDO_KEEPALIVE_PID=$!
+    }
+    
     # Install dependencies
     install_make
     install_golang
@@ -472,6 +666,11 @@ main() {
     # Verify everything
     verify_installations
     
+    # Kill sudo keepalive process if it exists
+    if [ -n "${SUDO_KEEPALIVE_PID:-}" ]; then
+        kill "$SUDO_KEEPALIVE_PID" 2>/dev/null || true
+    fi
+    
     echo ""
     echo "=================================="
     echo "Installation Complete!"
@@ -481,5 +680,46 @@ main() {
     echo ""
 }
 
-# Run main function
-main
+# ================================
+# Main entry point
+# ================================
+main() {
+    # Check for command line arguments
+    if [ $# -gt 0 ]; then
+        case "$1" in
+            uninstall|remove|cleanup)
+                # Set all flags to true for manual uninstall (remove everything)
+                INSTALLED_MAKE=true
+                INSTALLED_GO=true
+                INSTALLED_SQLC=true
+                INSTALLED_MIGRATE=true
+                INSTALLED_DOCKER=true
+                INSTALLED_DOCKER_COMPOSE=true
+                INSTALLED_AIR=true
+                uninstall_all
+                exit 0
+                ;;
+            --help|-h|help)
+                echo "Usage: $0 [COMMAND]"
+                echo ""
+                echo "Commands:"
+                echo "  (no args)           Install all dependencies"
+                echo "  uninstall           Uninstall all dependencies"
+                echo "  help                Show this help message"
+                echo ""
+                exit 0
+                ;;
+            *)
+                print_error "Unknown command: $1"
+                echo "Run '$0 help' for usage information."
+                exit 1
+                ;;
+        esac
+    fi
+    
+    # Run installation
+    main_install
+}
+
+# Run main function with all arguments
+main "$@"
