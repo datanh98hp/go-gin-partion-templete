@@ -17,7 +17,7 @@ type LoggerConfig struct {
 	Level     string
 	FileName  string
 	MaxSize   int
-	MaxBackUp int
+	MaxBackUps int
 	MaxAge    int
 	Compress  bool
 	IsDev     string
@@ -50,7 +50,7 @@ func NewLogger(config LoggerConfig) *zerolog.Logger {
 		writer = &lumberjack.Logger{
 			Filename:   config.FileName,
 			MaxSize:    config.MaxSize,
-			MaxBackups: config.MaxBackUp,
+			MaxBackups: config.MaxBackUps,
 			MaxAge:     config.MaxAge,   //days
 			Compress:   config.Compress, // disabled by default
 			LocalTime:  true,

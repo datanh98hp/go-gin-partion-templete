@@ -44,7 +44,7 @@ func NewLoggerWithPath(fileName string, level string) *zerolog.Logger {
 		Level:     level,
 		FileName:  path,
 		MaxSize:   2,
-		MaxBackUp: 5,
+		MaxBackUps: 5,
 		MaxAge:    5,
 		Compress:  true,
 		IsDev:     GetEnv("APP_ENV", "development"),
@@ -94,7 +94,7 @@ func SenitizeRequestBody(data map[string]any, sensitiveKeys []string) map[string
 	return senitive
 }
 
-func MushGetWorkingDir() string {
+func MustGetWorkingDir() string {
 	cwd, err := os.Getwd()
 	if err != nil {
 		log.Fatal("Unable get get work dir : ", err)

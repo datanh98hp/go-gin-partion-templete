@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"path/filepath"
 	"user-management-api/internal/app"
 	"user-management-api/internal/config"
@@ -12,41 +11,37 @@ import (
 )
 
 func main() {
-	rootDir := utils.MushGetWorkingDir()
+	rootDir := utils.MustGetWorkingDir()
+
 	logFile := filepath.Join(rootDir, "internal/logs/app.log")
+
 	logger.InitLogger(logger.LoggerConfig{
-		Level:     "info",
-		FileName:  logFile,
-		MaxSize:   2,
-		MaxBackUp: 5,
-		MaxAge:    5,
-		Compress:  true,
-		IsDev:     utils.GetEnv("APP_ENV", "development"),
+		Level:      "info",
+		FileName:   logFile,
+		MaxSize:    1,
+		MaxBackUps: 5,
+		MaxAge:     5,
+		Compress:   true,
+		IsDev:      utils.GetEnv("APP_EVN", "development"),
 	})
-	//Load .env file
-	err := godotenv.Load(filepath.Join(rootDir, ".env"))
-	if err != nil {
-		log.Printf("Error loading .env file")
-		logger.Log.Warn().Msg("Error loading .env file in api server")
+
+	if err := godotenv.Load(filepath.Join(rootDir, ".env")); err != nil {
+		logger.Log.Warn().Msg("⚠️ No .env file found")
 	} else {
-		log.Printf("Loaded .env file")
-		logger.Log.Info().Msg("Loaded .env file in api server")
+		logger.Log.Info().Msg("✅ Loaded successfully .env in api proccess")
 	}
 
-	//initialize the config
+	// Initialize configuration
 	cfg := config.NewConfig()
-	//initialize theapplicationn
+
+	// Initialize application
 	application, err := app.NewApplication(cfg)
 	if err != nil {
-		// panic(err)
-		logger.Log.Fatal().Err(err).Msgf("Failed to create application: %s", err.Error())
+		logger.Log.Fatal().Err(err).Msg("Failed to initialize application")
 	}
 
-	//start server
-	// Run the application
+	// Start server
 	if err := application.Run(); err != nil {
-		// panic(err)
-		logger.Log.Fatal().Err(err).Msgf("Application failed to run: %s", err.Error())
+		logger.Log.Fatal().Err(err).Msg("Application run failed")
 	}
-
 }
